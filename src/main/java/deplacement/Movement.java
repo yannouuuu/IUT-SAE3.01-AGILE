@@ -1,9 +1,11 @@
 package deplacement;
 
+import ui.AffichageMap;
+
 public class Movement {
-    CluedoMap map;
-    
-    public Movement(CluedoMap map){
+    AffichageMap map;
+
+    public Movement(AffichageMap map){
         this.map = map ;
     }
 
