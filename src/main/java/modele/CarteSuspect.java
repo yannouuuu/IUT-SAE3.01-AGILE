@@ -1,3 +1,5 @@
+package modele;
+
 public class CarteSuspect extends Carte {
     private final Suspects suspect;
 

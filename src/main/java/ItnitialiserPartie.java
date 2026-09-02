@@ -1,3 +1,5 @@
+import modele.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -6,31 +8,25 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class ItnitialiserPartie {
-    
-    public String demandePerso() {
-        Scanner sc = new Scanner(System.in);
+
+    public String demandePerso(Scanner sc) {
         System.out.print("Entrez le nom du joueur : ");
-        String nom = sc.nextLine();
-        return nom;
+        return sc.nextLine();
     }
-    
-    public Personage[] creerJoueurs(String nomJoueur, List<List<Carte>> inventaires) {
+
+    public Joueur[] creerJoueurs(String nomJoueur, List<List<Carte>> inventaires) {
 
         List<Suspects> suspects = new ArrayList<>(Arrays.asList(Suspects.values()));
         Collections.shuffle(suspects);
 
-        String bot1 = suspects.get(0).name();
-        String bot2 = suspects.get(1).name();
-        String bot3 = suspects.get(2).name();
+        Joueur joueur = new Joueur(nomJoueur, inventaires.get(0).toArray(new Carte[0]));
+        Bot b1 = new Bot(suspects.get(0).name(), inventaires.get(1).toArray(new Carte[0]));
+        Bot b2 = new Bot(suspects.get(1).name(), inventaires.get(2).toArray(new Carte[0]));
+        Bot b3 = new Bot(suspects.get(2).name(), inventaires.get(3).toArray(new Carte[0]));
 
-        Personage joueur = new Personage(nomJoueur, inventaires.get(0).toArray(new Carte[0]));
-        Personage b1 = new Personage(bot1, inventaires.get(1).toArray(new Carte[0]));
-        Personage b2 = new Personage(bot2, inventaires.get(2).toArray(new Carte[0]));
-        Personage b3 = new Personage(bot3, inventaires.get(3).toArray(new Carte[0]));
-
-        return new Personage[]{joueur, b1, b2, b3};
+        return new Joueur[]{joueur, b1, b2, b3};
     }
-    
+
     public static List<List<Carte>> distribuerCartes(List<Carte> cartes) {
         Collections.shuffle(cartes);
 
@@ -53,6 +49,7 @@ public class ItnitialiserPartie {
         }
         return inventaires;
     }
+
     public static Carte[] tirerCartesCachees() {
         Random rand = new Random();
 
@@ -70,7 +67,6 @@ public class ItnitialiserPartie {
 
         return new Carte[]{armeCachee, lieuCache, suspectCache};
     }
-
 
     public Object[] systemeDistribution() {
         List<Carte> toutes = creerToutesLesCartes();
@@ -91,17 +87,14 @@ public class ItnitialiserPartie {
     public static List<Carte> creerToutesLesCartes() {
         List<Carte> cartes = new ArrayList<>();
 
-        // 6 armes
         for (Armes a : Armes.values()) {
             cartes.add(new CarteArme(a));
         }
 
-        // 9 lieux
         for (Lieux l : Lieux.values()) {
             cartes.add(new CarteLieu(l));
         }
 
-        // 6 suspects
         for (Suspects s : Suspects.values()) {
             cartes.add(new CarteSuspect(s));
         }

@@ -1,5 +1,6 @@
 package ui;
 
+import carnet.Carnet;
 import deplacement.De;
 
 import java.util.List;
@@ -7,18 +8,17 @@ import java.util.List;
 /** Panneau de droite : le carnet, ou la face du de pendant le deplacement. */
 public class PanneauDroit {
 
-    private final AffichageCarnet carnet = new AffichageCarnet();
-    private final De de = new De();
-    private boolean vueCarnet = false;
-    private int valeurDe;
+    private final Carnet carnet = new Carnet();
+    private final De     de     = new De();
+    private int valeurDe = 0;
 
     public void ouvrirCarnet() {
-        vueCarnet = true;
+        carnet.ouvrir();
         valeurDe = 0;
     }
 
     public void revenirMap() {
-        vueCarnet = false;
+        carnet.fermer();
         valeurDe = 0;
     }
 
@@ -27,24 +27,22 @@ public class PanneauDroit {
     }
 
     public boolean surCarnet() {
-        return vueCarnet;
+        return carnet.estOuvert();
     }
 
     public void traiter(String saisie) {
-        if (vueCarnet) {
-            carnet.traiter(saisie);
-        }
+        carnet.traiter(saisie);
     }
 
     public List<String> lignes() {
         if (valeurDe > 0) {
             return AffichageDe.rendu(valeurDe);
         }
-        return carnet.rendu(vueCarnet);
+        return AffichageCarnet.rendu(carnet);
     }
 
     public String aide() {
-        if (vueCarnet) {
+        if (carnet.estOuvert()) {
             return "+ Saisie (Espace = cocher, z/s = naviguer, /map = revenir, q = quitter) > ";
         }
         return "+ Saisie (/carnet = ouvrir le carnet, /de = lancer le de, q = quitter) > ";

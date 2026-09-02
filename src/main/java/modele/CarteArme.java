@@ -1,3 +1,5 @@
+package modele;
+
 public class CarteArme extends Carte {
     private final Armes arme;
 

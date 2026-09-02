@@ -1,0 +1,3 @@
+package modele;
+
+public enum Armes { CHANDELIER, CORDE, PISTOLET, COUTEAU, CLEF_ANGLAISE, MATRAQUE }

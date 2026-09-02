@@ -1,5 +1,8 @@
+package modele;
+
 public class CarteLieu extends Carte {
     private final Lieux lieu;
+
     public CarteLieu(Lieux lieu) {
         this.lieu = lieu;
     }

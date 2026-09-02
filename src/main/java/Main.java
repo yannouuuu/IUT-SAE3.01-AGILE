@@ -1,3 +1,4 @@
+import modele.*;
 import ui.Menu;
 import ui.Rendu;
 
@@ -9,17 +10,19 @@ public class Main {
     public static void main(String[] args) {
         Scanner clavier = new Scanner(System.in);
         String choix = Menu.afficher(clavier);
-        
+
         ItnitialiserPartie init = new ItnitialiserPartie();
 
-        String nomJoueur = init.demandePerso();
+        String nomJoueur = init.demandePerso(clavier);
 
         Object[] resultat = init.systemeDistribution();
 
         List<List<Carte>> inventaires = (List<List<Carte>>) resultat[0];
         Carte[] cartesCachees = (Carte[]) resultat[1];
 
-        Personage[] joueurs = init.creerJoueurs(nomJoueur, inventaires);
+        Joueur[] joueurs = init.creerJoueurs(nomJoueur, inventaires);
 
+        Rendu rendu = new Rendu(clavier);
+        rendu.boucle();
     }
 }

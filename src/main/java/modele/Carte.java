@@ -1,4 +1,7 @@
+package modele;
+
 public abstract class Carte {
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -6,7 +9,7 @@ public abstract class Carte {
         return true;
     }
 
-    public boolean demande(Carte cDemander, Personage p) {
+    public boolean demande(Carte cDemander, Joueur p) {
         Carte[] inventory = p.getCardInventory();
         for (Carte c : inventory) {
             if (c.equals(cDemander)) {

@@ -1,95 +1,71 @@
 package ui;
 
+import carnet.Carnet;
+import carnet.Carnet.Entree;
+
 import java.util.ArrayList;
 import java.util.List;
 
-/** Carnet des suspects : on coche les elements comme sur le carnet papier. */
+/** Rendu ASCII du carnet. Lit l'etat depuis {@link Carnet}, n'en modifie rien. */
 public class AffichageCarnet {
 
     private static final String JAUNE = "\u001B[33m";
     private static final String RESET = "\u001B[0m";
 
-    private static final String[] SUSPECTS = {"Moutarde", "Rose", "Pervenche", "Violet", "Olive", "Leblanc"};
-    private static final String[] ARMES = {"Chandelier", "Corde", "Pistolet", "Couteau", "Clef anglaise", "Matraque"};
-    private static final String[] LIEUX = {"Cuisine", "Salle a bal", "salon", "Salle a manger",
-            "Bureau", "Bibliotheque", "Hall", "Veranda"};
+    /** Produit les lignes encadrees du carnet. Bord jaune quand actif. */
+    public static List<String> rendu(Carnet carnet) {
+        List<Entree> entrees   = carnet.getEntrees();
+        int          selection = carnet.getSelection();
+        boolean      actif     = carnet.estOuvert();
 
-    private final List<Entree> entrees = new ArrayList<>();
-    private int selection;
-
-    public AffichageCarnet() {
-        ajouter("Suspects", SUSPECTS);
-        ajouter("Armes", ARMES);
-        ajouter("Lieux", LIEUX);
-        selection = 1;
-    }
-
-    private void ajouter(String titre, String[] noms) {
-        entrees.add(new Entree(titre, true));
-        for (String nom : noms) {
-            entrees.add(new Entree(nom, false));
-        }
-    }
-
-    /** " " (ligne vide) = cocher/decocher, z = monter, s = descendre. */
-    public void traiter(String saisie) {
-        if (saisie.isBlank()) {
-            cocher();
-        } else if (saisie.equals("z")) {
-            monter();
-        } else if (saisie.equals("s")) {
-            descendre();
-        }
-    }
-
-    private void cocher() {
-        Entree e = entrees.get(selection);
-        if (!e.titre) {
-            e.coche = !e.coche;
-        }
-    }
-
-    private void monter() {
-        do {
-            if (selection > 0) {
-                selection--;
-            }
-        } while (entrees.get(selection).titre && selection > 0);
-    }
-
-    private void descendre() {
-        do {
-            if (selection < entrees.size() - 1) {
-                selection++;
-            }
-        } while (entrees.get(selection).titre && selection < entrees.size() - 1);
-    }
-
-    /** Rend le carnet encadre de jaune quand il est actif. */
-    public List<String> rendu(boolean actif) {
         List<String> contenu = new ArrayList<>();
         for (int i = 0; i < entrees.size(); i++) {
             Entree e = entrees.get(i);
-            String prefixe = i == selection ? "> " : "  ";
-            if (e.titre) {
-                contenu.add(prefixe + e.nom + " :");
+
+            String prefixe;
+            if (i == selection) {
+                prefixe = "> ";
             } else {
-                contenu.add(prefixe + "[" + (e.coche ? "x" : " ") + "] " + e.nom);
+                prefixe = "  ";
+            }
+
+            if (e.estTitre()) {
+                contenu.add(prefixe + e.getNom() + " :");
+            } else {
+                String coche;
+                if (e.estCoche()) {
+                    coche = "x";
+                } else {
+                    coche = " ";
+                }
+                contenu.add(prefixe + "[" + coche + "] " + e.getNom());
             }
         }
 
-        int largeur = 0;
+        int largeurContenu = 0;
         for (String ligne : contenu) {
-            if (ligne.length() > largeur) {
-                largeur = ligne.length();
-            }
+            if (ligne.length() > largeurContenu) largeurContenu = ligne.length();
         }
+
+        int marge = 2;
+        int largeurInterne = largeurContenu + marge * 2;
+
+        StringBuilder sbBord = new StringBuilder();
+        for (int i = 0; i < largeurInterne; i++) {
+            sbBord.append('-');
+        }
+        String bord = sbBord.toString();
+
+        StringBuilder sbPad = new StringBuilder();
+        for (int i = 0; i < marge; i++) {
+            sbPad.append(' ');
+        }
+        String padding = sbPad.toString();
 
         List<String> lignes = new ArrayList<>();
-        String bord = "-".repeat(largeur);
         lignes.add("+" + bord + "+");
         for (String ligne : contenu) {
-            lignes.add("| " + pad(ligne, largeur - 2) + " |");
+            lignes.add("|" + padding + pad(ligne, largeurContenu) + padding + "|");
         }
         lignes.add("+" + bord + "+");
 
@@ -101,22 +77,9 @@ public class AffichageCarnet {
         return lignes;
     }
 
-    private String pad(String ligne, int largeur) {
+    private static String pad(String ligne, int largeur) {
         StringBuilder sb = new StringBuilder(ligne);
-        while (sb.length() < largeur) {
-            sb.append(' ');
-        }
+        while (sb.length() < largeur) sb.append(' ');
         return sb.toString();
-    }
-
-    private static class Entree {
-        final String nom;
-        final boolean titre;
-        boolean coche;
-
-        Entree(String nom, boolean titre) {
-            this.nom = nom;
-            this.titre = titre;
-        }
     }
 }
