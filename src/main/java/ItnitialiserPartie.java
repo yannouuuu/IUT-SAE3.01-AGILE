@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -6,11 +7,30 @@ import java.util.Scanner;
 
 public class ItnitialiserPartie {
     
-    public void demandePerso() {
+    public String demandePerso() {
         Scanner sc = new Scanner(System.in);
         System.out.print("Entrez le nom du joueur : ");
         String nom = sc.nextLine();
+        return nom;
     }
+    
+    public Personage[] creerJoueurs(String nomJoueur, List<List<Carte>> inventaires) {
+
+        List<Suspects> suspects = new ArrayList<>(Arrays.asList(Suspects.values()));
+        Collections.shuffle(suspects);
+
+        String bot1 = suspects.get(0).name();
+        String bot2 = suspects.get(1).name();
+        String bot3 = suspects.get(2).name();
+
+        Personage joueur = new Personage(nomJoueur, inventaires.get(0).toArray(new Carte[0]));
+        Personage b1 = new Personage(bot1, inventaires.get(1).toArray(new Carte[0]));
+        Personage b2 = new Personage(bot2, inventaires.get(2).toArray(new Carte[0]));
+        Personage b3 = new Personage(bot3, inventaires.get(3).toArray(new Carte[0]));
+
+        return new Personage[]{joueur, b1, b2, b3};
+    }
+    
     public static List<List<Carte>> distribuerCartes(List<Carte> cartes) {
         Collections.shuffle(cartes);
 
