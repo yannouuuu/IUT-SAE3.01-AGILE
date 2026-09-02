@@ -3,15 +3,17 @@ public class Personage {
     private String nom;
     private int x;
     private int y;
+    private Carte[] cardInventory ;
 
-    public Personage(String nom , int x, int y){
+    public Personage(String nom , int x, int y, Carte [] cI){
         this.nom = nom;
         this.x = x;
         this.y = y;
+        this.cardInventory = cI;
     }
 
-    public Personage(String nom){
-        this(nom,1,12);
+    public Personage(String nom, Carte [] cI){
+        this(nom,1,12, cI);
     }
 
     public int getX(){
@@ -22,6 +24,8 @@ public class Personage {
         return this.y;
     }
 
+    public Carte[] getCardInventory() {return cardInventory;}
+    
     public void setX(int x){
         this.x = x;
     }

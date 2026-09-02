@@ -1,3 +1,5 @@
+package ui;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -7,7 +9,7 @@ import java.util.List;
  *
  * Legende  : # = mur | . = couloir | === = porte | <-> = passage secret
  */
-public class CluedoMap {
+public class AffichageMap {
 
     private static final int CELL_W = 24;
     private static final int CELL_H = 6;
@@ -51,7 +53,8 @@ public class CluedoMap {
             {"Véranda", "Salon"},
     };
 
-    public static String render() {
+    /** Lignes du plateau pretes a afficher. */
+    public List<String> lignes() {
         int height = ROWS * (CELL_H + 1) + 1;
         int width = COLS * (CELL_W + 1) + 1;
         char[][] grid = new char[height][width];
@@ -125,7 +128,7 @@ public class CluedoMap {
 
         // Portes (trous avec marqueurs =)
         for (String[] door : DOORS) {
-            int[] pos = find(door[0]);
+            int[] pos = positionPiece(door[0]);
             int r = pos[0], c = pos[1];
             int top = r * (CELL_H + 1);
             int left = c * (CELL_W + 1);
@@ -149,16 +152,36 @@ public class CluedoMap {
             }
         }
 
-        String[] rows = new String[height + 2];
+        List<String> rows = new ArrayList<>(height + 1);
         for (int y = 0; y < height; y++) {
-            rows[y] = new String(grid[y]);
+            rows.add(new String(grid[y]));
         }
-        rows[height] = "";
-        rows[height + 1] = "Legende : # mur | . couloir | === porte | <-> passage secret";
-        return String.join("\n", rows);
+        rows.add("Legende : # mur | . couloir | === porte | <-> passage secret");
+        return rows;
     }
 
-    private static List<String> labelLines(String room) {
+    /** Taille de la grille logique en cases (1 case = une salle ou un couloir). */
+    public int getNbLignes() {
+        return ROWS;
+    }
+
+    public int getNbColonnes() {
+        return COLS;
+    }
+
+    /** Coordonnees {ligne, colonne} d'une salle dans la grille logique. */
+    public int[] positionPiece(String piece) {
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                if (piece.equals(LAYOUT[r][c])) {
+                    return new int[]{r, c};
+                }
+            }
+        }
+        throw new IllegalArgumentException("Pièce inconnue : " + piece);
+    }
+
+    private List<String> labelLines(String room) {
         List<String> lines = new ArrayList<>();
         lines.add(room);
         for (String[] secret : SECRET) {
@@ -166,15 +189,5 @@ public class CluedoMap {
                 lines.add("<-> " + secret[1]);
         }
         return lines;
-    }
-
-    private static int[] find(String room) {
-        for (int r = 0; r < ROWS; r++) {
-            for (int c = 0; c < COLS; c++) {
-                if (room.equals(LAYOUT[r][c]))
-                    return new int[]{r, c};
-            }
-        }
-        throw new IllegalArgumentException("Pièce inconnue : " + room);
     }
 }

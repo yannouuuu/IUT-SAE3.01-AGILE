@@ -1,6 +1,6 @@
-# Cluedo — Groupe 7
+# No Way Out — Cluedo — Groupe 7
 
-Projet Java : un Cluedo en interface console.
+No Way Out est un Cluedo en interface console.
 
 ## Le jeu
 
@@ -62,7 +62,7 @@ src/main/java/
 ├── modele/
 │   ├── Joueur.java / Bot.java
 │   ├── Carte.java              (arme + lieu + suspect)
-│   ├── Arm.java / Lieux.java / Suspect.java   Enums
+│   ├── Armes.java / Lieux.java / Suspects.java   Enums
 │   └── Plateau.java            Grille logique (36x126): pièces, portes, passages, couloir, mur
 ├── deplacement/
 │   ├── De.java                 Lancer du dé
