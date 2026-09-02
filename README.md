@@ -83,7 +83,8 @@ src/main/java/
 ## Lancer le jeu
 
 ```bash
-./run.sh
+./run.sh        # Linux / macOS
+run.bat         # Windows
 ```
 
 ou
