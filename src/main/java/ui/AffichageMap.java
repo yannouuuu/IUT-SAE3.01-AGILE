@@ -53,7 +53,8 @@ public class AffichageMap {
             {"Véranda", "Salon"},
     };
 
-    public static List<String> lignes() {
+    /** Lignes du plateau pretes a afficher. */
+    public List<String> lignes() {
         int height = ROWS * (CELL_H + 1) + 1;
         int width = COLS * (CELL_W + 1) + 1;
         char[][] grid = new char[height][width];
@@ -127,7 +128,7 @@ public class AffichageMap {
 
         // Portes (trous avec marqueurs =)
         for (String[] door : DOORS) {
-            int[] pos = find(door[0]);
+            int[] pos = positionPiece(door[0]);
             int r = pos[0], c = pos[1];
             int top = r * (CELL_H + 1);
             int left = c * (CELL_W + 1);
@@ -159,7 +160,28 @@ public class AffichageMap {
         return rows;
     }
 
-    private static List<String> labelLines(String room) {
+    /** Taille de la grille logique en cases (1 case = une salle ou un couloir). */
+    public int getNbLignes() {
+        return ROWS;
+    }
+
+    public int getNbColonnes() {
+        return COLS;
+    }
+
+    /** Coordonnees {ligne, colonne} d'une salle dans la grille logique. */
+    public int[] positionPiece(String piece) {
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                if (piece.equals(LAYOUT[r][c])) {
+                    return new int[]{r, c};
+                }
+            }
+        }
+        throw new IllegalArgumentException("Pièce inconnue : " + piece);
+    }
+
+    private List<String> labelLines(String room) {
         List<String> lines = new ArrayList<>();
         lines.add(room);
         for (String[] secret : SECRET) {
@@ -167,15 +189,5 @@ public class AffichageMap {
                 lines.add("<-> " + secret[1]);
         }
         return lines;
-    }
-
-    private static int[] find(String room) {
-        for (int r = 0; r < ROWS; r++) {
-            for (int c = 0; c < COLS; c++) {
-                if (room.equals(LAYOUT[r][c]))
-                    return new int[]{r, c};
-            }
-        }
-        throw new IllegalArgumentException("Pièce inconnue : " + room);
     }
 }

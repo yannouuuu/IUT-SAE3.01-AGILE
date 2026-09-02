@@ -10,6 +10,7 @@ public class Rendu {
 
     private final Scanner clavier;
     private final AffichageCarnet carnet = new AffichageCarnet();
+    private final AffichageMap map = new AffichageMap();
     private final De de = new De();
     private boolean vueCarnet = false;
     private int valeurDe;
@@ -41,7 +42,7 @@ public class Rendu {
     }
 
     private void afficher() {
-        List<String> lignesMap = AffichageMap.lignes();
+        List<String> lignesMap = map.lignes();
         List<String> lignesDroite = valeurDe > 0 ? AffichageDe.rendu(valeurDe) : carnet.rendu(vueCarnet);
         int largeurMap = lignesMap.get(0).length() + 3;
 
