@@ -28,4 +28,4 @@ N’oubliez pas d’ajouter une photo du radiateur d’information (kanban + Bur
 ## Radiateur d'information
 
 ![Radiateur d'information](radiateur01.png)
-![Radiateur d'information(radiateur02.png)
+![Radiateur d'information](radiateur02.png)

@@ -1,5 +1,3 @@
-import java;
-import java.math.RoundingMode;
 import java.util.Random;
 
 public class Carte {

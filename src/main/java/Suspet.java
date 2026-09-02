@@ -1,3 +1,0 @@
-import java;
-
-enum Suspect{MOUTARDE, ROSE, PERVENCHE, VIOLET, OLIVE, LEBLANC}

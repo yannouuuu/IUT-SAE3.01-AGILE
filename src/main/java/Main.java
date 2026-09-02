@@ -1,5 +1,5 @@
 public class Main {
     public static void main(String[] args){
-        System.out.println(CluedoMap.render());
+        new SaisieUtilisateur().boucle();
     }
 }
