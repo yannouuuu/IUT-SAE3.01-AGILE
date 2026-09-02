@@ -1,32 +1,22 @@
-import java.util.Random;
-
-public class Carte {
-    private final Armes A;
-    private final Lieux L;
-    private final Suspects S;
-
-    public Carte(){
-        Random rand = new Random();
-        this.A = Armes.values()[rand.nextInt(Armes.values().length)];
-        this.L = Lieux.values()[rand.nextInt(Lieux.values().length)];
-        this.S = Suspects.values()[rand.nextInt(Suspects.values().length)];
-    }
-
-    public Armes getArmes() {return this.A;}
-
-    public Lieux getLieux() {return this.L;}
-
-    public Suspects getSuspects() {return this.S;}
-
+public abstract class Carte {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-
-        Carte other = (Carte) obj;
-        return this.A == other.A &&
-            this.L == other.L &&
-            this.S == other.S;
+        return true;
     }
 
+    public boolean demande(Carte cDemander, Personage p) {
+        Carte[] inventory = p.getCardInventory();
+        for (Carte c : inventory) {
+            if (c.equals(cDemander)) {
+                System.out.println(p.getNom() + " a cette carte.");
+                return true;
+            }
+        }
+        System.out.println(p.getNom() + " n'a pas cette carte.");
+        return false;
+    }
+
+    public abstract String toString();
 }

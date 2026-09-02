@@ -1,7 +1,5 @@
 package ui;
 
-import deplacement.De;
-
 import java.util.List;
 import java.util.Scanner;
 
@@ -9,11 +7,8 @@ import java.util.Scanner;
 public class Rendu {
 
     private final Scanner clavier;
-    private final AffichageCarnet carnet = new AffichageCarnet();
     private final AffichageMap map = new AffichageMap();
-    private final De de = new De();
-    private boolean vueCarnet = false;
-    private int valeurDe;
+    private final PanneauDroit panneau = new PanneauDroit();
 
     public Rendu(Scanner clavier) {
         this.clavier = clavier;
@@ -28,41 +23,41 @@ public class Rendu {
                 return;
             }
             if (saisie.equalsIgnoreCase("/carnet")) {
-                vueCarnet = true;
-                valeurDe = 0;
+                panneau.ouvrirCarnet();
             } else if (saisie.equalsIgnoreCase("/map")) {
-                vueCarnet = false;
-                valeurDe = 0;
+                panneau.revenirMap();
             } else if (saisie.equalsIgnoreCase("/de")) {
-                valeurDe = de.lancer();
-            } else if (vueCarnet) {
-                carnet.traiter(saisie);
+                panneau.lancerDe();
+            } else {
+                panneau.traiter(saisie);
             }
         }
     }
 
     private void afficher() {
         List<String> lignesMap = map.lignes();
-        List<String> lignesDroite = valeurDe > 0 ? AffichageDe.rendu(valeurDe) : carnet.rendu(vueCarnet);
+        List<String> lignesDroite = panneau.lignes();
         int largeurMap = lignesMap.get(0).length() + 3;
 
         System.out.println();
-        System.out.println(Logo.rendu(largeurMap + largeurCarnet(lignesDroite)));
+        System.out.println(Logo.rendu(largeurMap + largeurPanneau(lignesDroite)));
 
         for (int i = 0; i < lignesMap.size(); i++) {
-            String ligneDroite = i < lignesDroite.size() ? lignesDroite.get(i) : "";
-            System.out.println(pad(lignesMap.get(i), largeurMap) + ligneDroite);
+            System.out.println(pad(lignesMap.get(i), largeurMap) + ligneDroite(lignesDroite, i));
         }
 
         System.out.println();
-        if (vueCarnet) {
-            System.out.print("+ Saisie (Espace = cocher, z/s = naviguer, /map = revenir, q = quitter) > ");
-        } else {
-            System.out.print("+ Saisie (/carnet = ouvrir le carnet, /de = lancer le de, q = quitter) > ");
-        }
+        System.out.print(panneau.aide());
     }
 
-    private int largeurCarnet(List<String> lignes) {
+    private String ligneDroite(List<String> lignes, int index) {
+        if (index < lignes.size()) {
+            return lignes.get(index);
+        }
+        return "";
+    }
+
+    private int largeurPanneau(List<String> lignes) {
         int max = 0;
         for (String ligne : lignes) {
             if (ligne.length() > max) {
