@@ -8,12 +8,12 @@ Scrum Master : Paloma Fiquet
 Nous avons rendu la saisie des actions.
 
 ### Ce que nous allons faire durant le prochain sprint
-La création des cartes, incluant le faît de demander à un joueur une carte, le positionnement du joueur, le dé et la vue du dé, la vue du carnet.
+La création des cartes, incluant le fait de demander à un joueur une carte, le positionnement du joueur, le dé et la vue du dé, la vue du carnet.
 
 ## Rétrospective
 
 ### Sur quoi avons nous butté ?
-Bien que la saisie des actions ait été faîte, la plupart du reste sont des bouts de codes non reliée entre eux. Donc au final on avait plein de classes et fonctions qui n'intérragisent pas entre-eux. 
+Bien que la saisie des actions ait été faite, la plupart du reste sont des bouts de codes non reliée entre eux. Donc au final on avait plein de classes et fonctions qui n'intérragisent pas entre-eux. 
 * Qu'est ce qu'il s'est parfaitement bien passé pendant le sprint (démo, rétro, organisation, répartition des US, répartition des taches, prédictibilité, technique, git, java, ide, etc.)
 Le GUI de base s'affiche bien et on peut quitter le jeu correctement.
 * Qu’est-ce qui m'a irrité ? dérangé ?
@@ -23,7 +23,7 @@ Au final on avait pas grand chose à montrer malgrès tout ce qu'on à coder.
 * Quel sujet souhaitons nous améliorer ? (1 seul)
 L'intéractivité.
 * Comment améliorer (3 options recommandés)
-Faire le positionnement et les actions reliée à d'autre UE.
+Faire le positionnement et les actions reliée à d'autre US.
 * Quelle action mettons nous en place sur le prochain sprint ?
 Les actions utilisateur.
 
