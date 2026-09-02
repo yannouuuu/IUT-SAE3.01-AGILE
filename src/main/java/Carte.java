@@ -1,9 +1,9 @@
 import java.util.Random;
 
 public class Carte {
-    private final Arm A;
+    private final Armes A;
     private final Lieux L;
-    private final Suspect S;
+    private final Suspects S;
 
     public Carte(){
         Random rand = new Random();
