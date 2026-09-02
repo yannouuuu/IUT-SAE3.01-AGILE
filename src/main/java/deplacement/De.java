@@ -5,10 +5,16 @@ import java.util.Random;
 public class De {
 
     private int numb ;
+    private Random rand; 
+    
 
     public De(){
-        Random rand = new Random();
-        this.numb = rand.nextInt(6)+1;
+        this.rand = new Random();
+        roll();    
+    }
+     
+    public void roll() {
+        this.numb = rand.nextInt(6) + 1;
     }
 
     public int getNum(){
