@@ -1,3 +1,5 @@
+package ui;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -7,7 +9,7 @@ import java.util.List;
  *
  * Legende  : # = mur | . = couloir | === = porte | <-> = passage secret
  */
-public class CluedoMap {
+public class AffichageMap {
 
     private static final int CELL_W = 24;
     private static final int CELL_H = 6;
@@ -51,7 +53,7 @@ public class CluedoMap {
             {"Véranda", "Salon"},
     };
 
-    public static String render() {
+    public static List<String> lignes() {
         int height = ROWS * (CELL_H + 1) + 1;
         int width = COLS * (CELL_W + 1) + 1;
         char[][] grid = new char[height][width];
@@ -149,13 +151,12 @@ public class CluedoMap {
             }
         }
 
-        String[] rows = new String[height + 2];
+        List<String> rows = new ArrayList<>(height + 1);
         for (int y = 0; y < height; y++) {
-            rows[y] = new String(grid[y]);
+            rows.add(new String(grid[y]));
         }
-        rows[height] = "";
-        rows[height + 1] = "Legende : # mur | . couloir | === porte | <-> passage secret";
-        return String.join("\n", rows);
+        rows.add("Legende : # mur | . couloir | === porte | <-> passage secret");
+        return rows;
     }
 
     private static List<String> labelLines(String room) {
