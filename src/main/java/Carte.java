@@ -7,9 +7,9 @@ public class Carte {
 
     public Carte(){
         Random rand = new Random();
-        this.A = Arm.values()[rand.nextInt(Arm.values().length)];
+        this.A = Armes.values()[rand.nextInt(Armes.values().length)];
         this.L = Lieux.values()[rand.nextInt(Lieux.values().length)];
-        this.S = Suspect.values()[rand.nextInt(Suspect.values().length)];
+        this.S = Suspects.values()[rand.nextInt(Suspects.values().length)];
     }
 
 }

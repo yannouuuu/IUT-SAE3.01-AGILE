@@ -62,7 +62,7 @@ src/main/java/
 ├── modele/
 │   ├── Joueur.java / Bot.java
 │   ├── Carte.java              (arme + lieu + suspect)
-│   ├── Arm.java / Lieux.java / Suspect.java   Enums
+│   ├── Armes.java / Lieux.java / Suspects.java   Enums
 │   └── Plateau.java            Grille logique : pièces, portes, passages
 ├── deplacement/
 │   ├── De.java                 Lancer du dé
