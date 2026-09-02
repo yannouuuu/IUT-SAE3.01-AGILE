@@ -18,6 +18,15 @@ public class Carte {
 
     public Suspects getSuspects() {return this.S;}
 
-    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Carte other = (Carte) obj;
+        return this.A == other.A &&
+            this.L == other.L &&
+            this.S == other.S;
+    }
 
 }
