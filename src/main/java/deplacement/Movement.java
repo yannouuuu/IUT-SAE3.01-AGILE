@@ -33,22 +33,25 @@ public class Movement {
         
         this.person.setPosition(newX, newY);
         this.caseRestant--;
+
+        return true;
     }
 
     public boolean moveUp(){
-        deplacer(0,1);
+        return deplacer(0,1);
     }
 
     public boolean moveDown(){
-        deplacer(0,-1);
+         return deplacer(0,-1);
     }
 
     public boolean moveLeft(){
-        deplacer(-1, 0);
+        return deplacer(-1, 0);
+     
     }
 
     public boolean moveRight(){
-        deplacer(1, 0);
+        return deplacer(1, 0);
     }
 
     public Personage getPersonage(){

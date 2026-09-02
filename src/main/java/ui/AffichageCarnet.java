@@ -11,8 +11,8 @@ public class AffichageCarnet {
 
     private static final String[] SUSPECTS = {"Moutarde", "Rose", "Pervenche", "Violet", "Olive", "Leblanc"};
     private static final String[] ARMES = {"Chandelier", "Corde", "Pistolet", "Couteau", "Clef anglaise", "Matraque"};
-    private static final String[] LIEUX = {"Cuisine", "Grand salon", "Petit salon", "Salle a manger",
-            "Bureau", "Bibliotheque", "Hall", "Studio", "Veranda"};
+    private static final String[] LIEUX = {"Cuisine", "Salle a bal", "salon", "Salle a manger",
+            "Bureau", "Bibliotheque", "Hall", "Veranda"};
 
     private final List<Entree> entrees = new ArrayList<>();
     private int selection;
