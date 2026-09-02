@@ -12,4 +12,12 @@ public class Carte {
         this.S = Suspects.values()[rand.nextInt(Suspects.values().length)];
     }
 
+    public Armes getArmes() {return this.A;}
+
+    public Lieux getLieux() {return this.L;}
+
+    public Suspects getSuspects() {return this.S;}
+
+    
+
 }

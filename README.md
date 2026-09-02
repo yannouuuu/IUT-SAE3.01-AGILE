@@ -62,8 +62,13 @@ src/main/java/
 ├── modele/
 │   ├── Joueur.java / Bot.java
 │   ├── Carte.java              (arme + lieu + suspect)
+<<<<<<< HEAD
 │   ├── Armes.java / Lieux.java / Suspects.java   Enums
 │   └── Plateau.java            Grille logique : pièces, portes, passages
+=======
+│   ├── Arm.java / Lieux.java / Suspect.java   Enums
+│   └── Plateau.java            Grille logique (36x126): pièces, portes, passages, couloir, mur
+>>>>>>> a7d794e3c1d25c90bf28857ad985a1b0433f582c
 ├── deplacement/
 │   ├── De.java                 Lancer du dé
 │   └── Mouvement.java          Déplacement aux flèches, cases restantes, collisions portes
