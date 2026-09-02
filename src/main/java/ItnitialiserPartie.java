@@ -1,0 +1,91 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
+
+public class ItnitialiserPartie {
+    
+    public void demandePerso() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Entrez le nom du joueur : ");
+        String nom = sc.nextLine();
+    }
+    public static List<List<Carte>> distribuerCartes(List<Carte> cartes) {
+        Collections.shuffle(cartes);
+
+        int[] tailles = {5, 5, 4, 4};
+
+        List<Integer> ordre = new ArrayList<>();
+        for (int t : tailles) ordre.add(t);
+        Collections.shuffle(ordre);
+
+        List<List<Carte>> inventaires = new ArrayList<>();
+        for (int i = 0; i < 4; i++) inventaires.add(new ArrayList<>());
+
+        int index = 0;
+        for (int i = 0; i < 4; i++) {
+            int nb = ordre.get(i);
+            for (int j = 0; j < nb; j++) {
+                inventaires.get(i).add(cartes.get(index));
+                index++;
+            }
+        }
+        return inventaires;
+    }
+    public static Carte[] tirerCartesCachees() {
+        Random rand = new Random();
+
+        CarteArme armeCachee = new CarteArme(
+            Armes.values()[rand.nextInt(Armes.values().length)]
+        );
+
+        CarteLieu lieuCache = new CarteLieu(
+            Lieux.values()[rand.nextInt(Lieux.values().length)]
+        );
+
+        CarteSuspect suspectCache = new CarteSuspect(
+            Suspects.values()[rand.nextInt(Suspects.values().length)]
+        );
+
+        return new Carte[]{armeCachee, lieuCache, suspectCache};
+    }
+
+
+    public Object[] systemeDistribution() {
+        List<Carte> toutes = creerToutesLesCartes();
+
+        Carte[] cachees = tirerCartesCachees();
+
+        toutes.removeIf(c ->
+            c.equals(cachees[0]) ||
+            c.equals(cachees[1]) ||
+            c.equals(cachees[2])
+        );
+
+        List<List<Carte>> inventaires = distribuerCartes(toutes);
+
+        return new Object[]{inventaires, cachees};
+    }
+
+    public static List<Carte> creerToutesLesCartes() {
+        List<Carte> cartes = new ArrayList<>();
+
+        // 6 armes
+        for (Armes a : Armes.values()) {
+            cartes.add(new CarteArme(a));
+        }
+
+        // 9 lieux
+        for (Lieux l : Lieux.values()) {
+            cartes.add(new CarteLieu(l));
+        }
+
+        // 6 suspects
+        for (Suspects s : Suspects.values()) {
+            cartes.add(new CarteSuspect(s));
+        }
+
+        return cartes;
+    }
+}
