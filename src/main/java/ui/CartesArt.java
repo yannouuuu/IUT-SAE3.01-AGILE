@@ -16,6 +16,7 @@ import java.util.Map;
  * Ce fichier est un "strip" : chaque ligne contient les 21 cartes cote a cote,
  * separees par des &. On decoupe donc chaque ligne sur ce separateur pour
  * reconstituer, colonne par colonne, le dessin complet (9 lignes) de chaque carte.
+ * Big up Chloe pour les cartes btw
  */
 final class CartesArt {
 
@@ -33,9 +34,6 @@ final class CartesArt {
     };
 
     private static final Map<String, List<String>> CARTES = charger();
-
-    private CartesArt() {
-    }
 
     /** Le dessin (plusieurs lignes) de la carte, ou un cadre vide si la cle est inconnue. */
     static List<String> dessin(String cle) {
@@ -69,7 +67,7 @@ final class CartesArt {
                 List<String> dessin = new ArrayList<>();
                 for (String[] champs : colonnesParLigne) {
                     if (col < champs.length) {
-                        dessin.add(champs[col].trim());
+                        dessin.add(rogner(champs[col]));
                     }
                 }
                 cartes.put(COLONNES[col], dessin);
@@ -78,6 +76,18 @@ final class CartesArt {
             // Fichier illisible : les cartes s'afficheront vides plutot que de faire planter le jeu.
         }
         return cartes;
+    }
+
+    private static String rogner(String texte) {
+        int debut = 0;
+        while (debut < texte.length() && texte.charAt(debut) <= ' ') {
+            debut++;
+        }
+        int fin = texte.length();
+        while (fin > debut && texte.charAt(fin - 1) <= ' ') {
+            fin--;
+        }
+        return texte.substring(debut, fin);
     }
 
     private static List<String> carteVide() {

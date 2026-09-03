@@ -10,18 +10,25 @@ import java.util.Random;
 
 public class ItnitialiserPartie {
 
-    public Joueur[] creerJoueurs(List<List<Carte>> inventaires) {
+    /**
+     * Cree les 4 joueurs de la partie : les nbHumains premiers sont controles au clavier,
+     * les autres sont des bots. Chacun incarne un personnage tire au hasard.
+     */
+    public Joueur[] creerJoueurs(List<List<Carte>> inventaires, int nbHumains) {
 
         List<Suspects> suspects = new ArrayList<>(Arrays.asList(Suspects.values()));
         Collections.shuffle(suspects);
 
-        // Chaque joueur incarne un personnage tire au hasard, qui donne sa pastille
-        Joueur joueur = new Joueur(suspects.get(0), inventaires.get(0).toArray(new Carte[0]));
-        Bot b1 = new Bot(suspects.get(1), inventaires.get(1).toArray(new Carte[0]));
-        Bot b2 = new Bot(suspects.get(2), inventaires.get(2).toArray(new Carte[0]));
-        Bot b3 = new Bot(suspects.get(3), inventaires.get(3).toArray(new Carte[0]));
-
-        return new Joueur[]{joueur, b1, b2, b3};
+        Joueur[] joueurs = new Joueur[4];
+        for (int i = 0; i < joueurs.length; i++) {
+            Carte[] inventaire = inventaires.get(i).toArray(new Carte[0]);
+            if (i < nbHumains) {
+                joueurs[i] = new Joueur(suspects.get(i), inventaire);
+            } else {
+                joueurs[i] = new Bot(suspects.get(i), inventaire);
+            }
+        }
+        return joueurs;
     }
 
     public static List<List<Carte>> distribuerCartes(List<Carte> cartes) {

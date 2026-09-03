@@ -40,4 +40,13 @@ public class Musique {
             active = true;
         }
     }
+
+    // arrete et ferme le clip, sinon la musique tourne encore et le programme ne quitte pas
+    public void arreter() {
+        if (clip == null) {
+            return;
+        }
+        clip.stop();
+        clip.close();
+    }
 }

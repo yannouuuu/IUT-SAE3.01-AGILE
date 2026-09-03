@@ -50,16 +50,33 @@ public class Rendu {
         }
         List<String> lignesDroite = panneau.lignes();
         int largeurGauche = largeurPanneau(lignesGauche) + 3;
+        int largeurContenu = largeurGauche + largeurPanneau(lignesDroite);
+
+        int largeurTerminal = Terminal.largeur();
+        String marge = " ".repeat(Math.max(0, (largeurTerminal - largeurContenu) / 2));
 
         System.out.println();
-        System.out.println(Logo.rendu(largeurGauche + largeurPanneau(lignesDroite)));
+        System.out.println(indenter(Logo.rendu(largeurContenu), marge));
 
         int nbLignes = Math.max(lignesGauche.size(), lignesDroite.size());
         for (int i = 0; i < nbLignes; i++) {
-            System.out.println(pad(ligneDroite(lignesGauche, i), largeurGauche) + ligneDroite(lignesDroite, i));
+            System.out.println(marge + pad(ligneDroite(lignesGauche, i), largeurGauche) + ligneDroite(lignesDroite, i));
         }
 
         System.out.println();
+    }
+
+    /** Ajoute la meme marge gauche devant chaque ligne d'un bloc de texte multi-lignes. */
+    private String indenter(String bloc, String marge) {
+        StringBuilder sb = new StringBuilder();
+        String[] lignes = bloc.split("\n");
+        for (int i = 0; i < lignes.length; i++) {
+            if (i > 0) {
+                sb.append('\n');
+            }
+            sb.append(marge).append(lignes[i]);
+        }
+        return sb.toString();
     }
 
     private String ligneDroite(List<String> lignes, int index) {

@@ -21,14 +21,20 @@ public class TourManager {
         return joueurCourant() instanceof Bot;
     }
 
-    public Joueur[] getJoueurs() {
-        return joueurs;
-    }
-
     public void joueurSuivant() {
         indexCourant = indexCourant + 1;
         if (indexCourant >= joueurs.length) {
             indexCourant = 0;
         }
+    }
+
+    /** Pour la sauvegarde : a qui c'etait le tour. */
+    public int getIndexCourant() {
+        return indexCourant;
+    }
+
+    /** Pour le chargement : on reprend au meme joueur qu'a la sauvegarde. */
+    public void definirIndexCourant(int index) {
+        this.indexCourant = index;
     }
 }

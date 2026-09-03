@@ -74,44 +74,6 @@ public class Mouvement {
         return true;
     }
 
-    public static String raisonBlocage(Joueur joueur, int dLigne, int dColonne, PortesFermees portes) {
-        String salleActuelle = AffichageMap.salleAuPoint(joueur.getX(), joueur.getY());
-        if (salleActuelle != null) {
-            String cote = coteDansLaDirection(dLigne, dColonne);
-            int[] sortie = AffichageMap.pointDevantPorte(salleActuelle, cote);
-            return sortie == null ? "C'est un mur." : null;
-        }
-
-        int ligne = joueur.getX() + dLigne;
-        int colonne = joueur.getY() + dColonne;
-
-        boolean horsPlateau = ligne < 0 || ligne >= AffichageMap.NB_POINTS_LIGNES
-                || colonne < 0 || colonne >= AffichageMap.NB_POINTS_COLONNES;
-        if (horsPlateau) {
-            return "Tu es au bord du plateau.";
-        }
-
-        String salleCible = AffichageMap.salleAuPoint(ligne, colonne);
-        if (salleCible == null) {
-            return null;
-        }
-
-        String cotePorte = coteOppose(coteDansLaDirection(dLigne, dColonne));
-        int[] devantPorte = AffichageMap.pointDevantPorte(salleCible, cotePorte);
-        boolean surLaPorte = devantPorte != null
-                && devantPorte[0] == joueur.getX()
-                && devantPorte[1] == joueur.getY();
-        if (!surLaPorte) {
-            return "C'est un mur : il faut etre pile devant la porte de " + salleCible + ".";
-        }
-
-        if (!portes.peutEntrer(salleCible)) {
-            return "La porte de " + salleCible + " est fermee a cle : il te faut la cle d'abord.";
-        }
-
-        return null;
-    }
-
     /** Le cote vise quand on bouge : haut = "N", bas = "S", gauche = "W", droite = "E". */
     private static String coteDansLaDirection(int dLigne, int dColonne) {
         if (dLigne == -1) {

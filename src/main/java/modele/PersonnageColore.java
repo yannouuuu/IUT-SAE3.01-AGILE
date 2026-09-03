@@ -1,6 +1,7 @@
 package modele;
 
 /**
+ * Contrat commun a tout personnage colore affichable sur le plateau :
  * une couleur ANSI et une pastille prete a afficher.
  */
 public interface PersonnageColore {

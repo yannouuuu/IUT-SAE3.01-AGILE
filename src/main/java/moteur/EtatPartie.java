@@ -26,8 +26,12 @@ public class EtatPartie {
     private final PortesFermees portes = new PortesFermees();
     private final List<Pnj> pnjs = new ArrayList<>();
 
+    /** Facon dont la partie s'est terminee, pour adapter l'ecran de fin. */
+    public enum Resultat { VICTOIRE, DEFAITE, ABANDON }
+
     private boolean terminee = false;
     private String messageFin = "";
+    private Resultat resultat = Resultat.ABANDON;
 
     public EtatPartie(Joueur[] joueurs, Carte[] cartesCachees) {
         this.joueurs = joueurs;
@@ -50,9 +54,6 @@ public class EtatPartie {
         return joueurs;
     }
 
-    public Joueur getHumain() {
-        return joueurs[0];
-    }
 
     /**
      * Deplace un joueur d'un point. Retourne false si le mouvement est
@@ -62,9 +63,6 @@ public class EtatPartie {
         return Mouvement.deplacer(joueur, dLigne, dColonne, portes);
     }
 
-    public String raisonBlocage(Joueur joueur, int dLigne, int dColonne) {
-        return Mouvement.raisonBlocage(joueur, dLigne, dColonne, portes);
-    }
 
     /** Nom de la salle ou se trouve le joueur, ou null s'il est dans le couloir. */
     public String salleDuJoueur(Joueur joueur) {
@@ -142,8 +140,13 @@ public class EtatPartie {
         return messageFin;
     }
 
-    public void terminer(String message) {
+    public Resultat getResultat() {
+        return resultat;
+    }
+
+    public void terminer(String message, Resultat resultat) {
         terminee = true;
         messageFin = message;
+        this.resultat = resultat;
     }
 }

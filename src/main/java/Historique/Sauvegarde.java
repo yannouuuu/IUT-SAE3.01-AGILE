@@ -6,36 +6,38 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Petit utilitaire d'ecriture/lecture de fichier, utilise pour la
+ * sauvegarde/chargement de partie (voir moteur.BoucleDeJeu).
+ */
+public class Sauvegarde extends Exception {
 
-public class Sauvegarde extends Exception{
+    private final String resultat;
 
-    private String resultat;
-
-    public Sauvegarde(String resultat){
-         this.resultat = resultat;
+    public Sauvegarde(String resultat) {
+        this.resultat = resultat;
     }
 
-
-    public void sauvegrade(String chemin){
-        try(FileWriter file = new FileWriter(new File(chemin))){
-            file.write(this.resultat);
-            file.write("\n");
-        }catch(IOException e){
+    /** Ecrit le contenu dans le fichier indique (le cree ou le remplace). */
+    public void sauvegrade(String chemin) {
+        try (FileWriter fichier = new FileWriter(new File(chemin))) {
+            fichier.write(this.resultat);
+            fichier.write("\n");
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
+    /** Relit tout le contenu d'un fichier, ligne par ligne. */
     public static String importer(String chemin) {
         StringBuilder resultat = new StringBuilder();
 
-        try(BufferedReader ficher = new BufferedReader(new FileReader(chemin))){
+        try (BufferedReader fichier = new BufferedReader(new FileReader(chemin))) {
             String ligne;
-
-            while((ligne = ficher.readLine())!= null){
+            while ((ligne = fichier.readLine()) != null) {
                 resultat.append(ligne).append("\n");
             }
-            
-        } catch ( IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return resultat.toString();

@@ -65,8 +65,8 @@ public class Enigme {
             if (virgule < 0) {
                 continue;
             }
-            String salle = ligne.substring(0, virgule).trim();
-            String texte = ligne.substring(virgule + 1).trim();
+            String salle = rogner(ligne.substring(0, virgule));
+            String texte = rogner(ligne.substring(virgule + 1));
             if (salle.equals(salleDeLaCle)) {
                 lecteur.close();
                 return new Enigme(texte, salle);
@@ -79,6 +79,18 @@ public class Enigme {
 
     public String getPhrase() {
         return phrases.get(random.nextInt(phrases.size()-1)+1);
+    }
+
+    private static String rogner(String texte) {
+        int debut = 0;
+        while (debut < texte.length() && texte.charAt(debut) <= ' ') {
+            debut++;
+        }
+        int fin = texte.length();
+        while (fin > debut && texte.charAt(fin - 1) <= ' ') {
+            fin--;
+        }
+        return texte.substring(debut, fin);
     }
 
     /*à revoir*/

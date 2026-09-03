@@ -2,16 +2,23 @@ package ui;
 
 import carnet.Carnet;
 import deplacement.De;
+import modele.Joueur;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/** Panneau de droite : le carnet, ou la face du de pendant le deplacement. */
+/** Panneau de droite : le carnet du joueur courant, ou la face du de pendant le deplacement. */
 public class PanneauDroit {
 
-    private final Carnet carnet = new Carnet();
+    private Carnet carnet = new Carnet();
     private final De     de     = new De();
     private int valeurDe = 0;
+
+    /** Bascule l'affichage et la saisie vers le carnet personnel du joueur dont c'est le tour. */
+    public void afficherCarnetDe(Joueur joueur) {
+        this.carnet = joueur.getCarnet();
+        valeurDe = 0;
+    }
 
     public void ouvrirCarnet() {
         carnet.ouvrir();

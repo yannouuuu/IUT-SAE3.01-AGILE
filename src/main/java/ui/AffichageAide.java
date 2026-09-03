@@ -8,7 +8,6 @@ import java.util.List;
  *
  * Affiche sous le carnet/de dans le panneau de droite, pour eviter d'avoir
  * a taper /aide pour les revoir : elles restent visibles en permanence.
- * Texte blanc sur fond sombre, pour bien se detacher du reste de l'ecran.
  */
 public final class AffichageAide {
 
@@ -23,6 +22,7 @@ public final class AffichageAide {
         List<String> contenu = List.of(
                 "Commandes :",
                 "/de        lancer le de",
+                "  fleches ou zqsd",
                 "/carnet    ouvrir le carnet",
                 "/cartes    voir tes cartes",
                 "/map       revenir sur la map",
@@ -34,7 +34,6 @@ public final class AffichageAide {
                 "/save      sauvegarder la partie",
                 "/musique   couper / remettre la musique",
                 "q          quitter"
-            
         );
 
         int largeur = 0;

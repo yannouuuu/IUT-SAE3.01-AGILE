@@ -46,6 +46,15 @@ public class PortesFermees {
         return portes;
     }
 
+    /** Pour la sauvegarde : force une cle a etre marquee comme trouvee, sans passer par la salle. */
+    public void marquerCleTrouvee(String salleVerrouillee) {
+        for (Porte porte : portes) {
+            if (porte.getSalleVerrouillee().equals(salleVerrouillee)) {
+                porte.cleTrouvee = true;
+            }
+        }
+    }
+
     /** Vrai si la salle n'est pas verrouillee, ou si sa cle a ete trouvee. */
     public boolean peutEntrer(String salle) {
         for (Porte porte : portes) {

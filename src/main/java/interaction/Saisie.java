@@ -2,7 +2,7 @@ package interaction;
 
 import java.util.Scanner;
 
-/** Boite de saisie : lit ce que tape l'utilisateur et controle les nombres. */
+// lit ce que tape l'utilisateur
 public class Saisie {
 
     private final Scanner clavier;
@@ -12,40 +12,57 @@ public class Saisie {
         this.clavier = clavier;
     }
 
-    /** Affiche l'invite puis retourne la ligne tapee, sans espaces autour. */
+    // affiche l'invite et renvoie la ligne tapee
     public String lireLigne(String invite) {
         System.out.print(invite);
         if (!clavier.hasNextLine()) {
-            // plus rien a lire : on fait comme si l'utilisateur quittait
+            // plus rien a lire, on quitte
             terminee = true;
             return "q";
         }
         String ligne = clavier.nextLine();
-        return ligne.trim();
+        return rogner(ligne);
     }
 
-    /** Vrai quand il n'y a plus rien a lire (entree fermee). */
+    private static String rogner(String texte) {
+        int debut = 0;
+        while (debut < texte.length() && texte.charAt(debut) <= ' ') {
+            debut++;
+        }
+        int fin = texte.length();
+        while (fin > debut && texte.charAt(fin - 1) <= ' ') {
+            fin--;
+        }
+        return texte.substring(debut, fin);
+    }
+
+    // vrai si y'a plus rien a lire
     public boolean estTerminee() {
         return terminee;
     }
 
+    // lit la direction et change les fleches en z/s/q/d
     public String LireLaDirection(String terminal) {
         return normaliserDirection(lireLigne(terminal));
     }
 
     public static String normaliserDirection(String ligne) {
-        if (ligne.endsWith("[A"))
+        if (ligne.endsWith("[A")) {
             return "z";
-        if (ligne.endsWith("[B"))
+        }
+        if (ligne.endsWith("[B")) {
             return "s";
-        if (ligne.endsWith("[D"))
+        }
+        if (ligne.endsWith("[D")) {
             return "q";
-        if (ligne.endsWith("[C"))
+        }
+        if (ligne.endsWith("[C")) {
             return "d";
+        }
         return ligne;
     }
 
-    /** Redemande tant que l'utilisateur ne tape pas un nombre entre min et max. */
+    // redemande jusqu'a avoir un nombre entre min et max
     public int lireNumero(String invite, int min, int max) {
         while (!terminee) {
             String reponse = lireLigne(invite);
@@ -55,7 +72,7 @@ public class Saisie {
                     return numero;
                 }
             } catch (NumberFormatException e) {
-                // ce n'est pas un nombre : on redemande juste en dessous
+                // pas un nombre, on redemande
             }
             System.out.println("Merci d'entrer un nombre entre " + min + " et " + max + ".");
         }

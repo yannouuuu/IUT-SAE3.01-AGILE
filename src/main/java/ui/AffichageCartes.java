@@ -57,7 +57,12 @@ public class AffichageCartes {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < dessins.size(); i++) {
                 List<String> dessin = dessins.get(i);
-                String morceau = y < dessin.size() ? dessin.get(y) : "";
+                String morceau;
+                if (y < dessin.size()) {
+                    morceau = dessin.get(y);
+                } else {
+                    morceau = "";
+                }
                 sb.append(BLANC).append(pad(morceau, CartesArt.largeur())).append(RESET);
                 if (i < dessins.size() - 1) {
                     sb.append(espace);
