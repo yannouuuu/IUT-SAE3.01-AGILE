@@ -200,6 +200,9 @@ public class BoucleDeJeu {
                 partie.terminer("Partie abandonnee. La solution etait :\n" + solutionEnTexte());
             } else if (commande == Commandes.Type.CHEAT_MOUVEMENT){
                 cheatMouvement(joueur);
+            } else if (commande == Commandes.Type.CHEAT_SOLUTION){
+                dire("La solution est :");
+                dire(solutionEnTexte());
             }else {
                 boolean consommee = rendu.getPanneau().traiter(texte);
                 if (!consommee) {
@@ -259,7 +262,7 @@ public class BoucleDeJeu {
 
             boolean deplace = partie.deplacer(joueur, dLigne, dColonne);
             if (!deplace) {
-                dire("Impossible d'aller par la : mur, bord du plateau, ou porte fermee a cle.");
+                dire(partie.raisonBlocage(joueur, dLigne, dColonne));
                 continue;
             }
 
@@ -306,7 +309,7 @@ public class BoucleDeJeu {
 
             boolean deplace = partie.deplacer(joueur, dLigne, dColonne);
             if (!deplace) {
-                dire("Impossible d'aller par la : mur, bord du plateau, ou porte fermee a cle.");
+                dire(partie.raisonBlocage(joueur, dLigne, dColonne));
                 continue;
             }
 
