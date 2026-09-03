@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+import Historique.Sauvegarde;
 import interaction.Commandes;
 import interaction.Pnj;
 import interaction.Saisie;
@@ -21,9 +22,6 @@ import ui.AffichageMap;
 import ui.Marqueur;
 import ui.Menu;
 import ui.Rendu;
-
-
-import Historique.Sauvegarde;
 
 /** Machine a etats du jeu : Menu -> Partie -> Fin. */
 public class BoucleDeJeu {
@@ -314,7 +312,7 @@ public class BoucleDeJeu {
         int pasRestants = valeur;
         while (pasRestants > 0 && !partie.estTerminee()) {
             afficherEcran();
-            String touche = saisie.lireLigne("Direction (" + pasRestants + " pas restants, z/q/s/d, x pour s'arreter) > ");
+            String touche = saisie.LireLaDirection("Direction (" + pasRestants + " pas restants, fleches ou z/q/s/d, x pour s'arreter) > ");
 
             if (touche.equals("x") || saisie.estTerminee()) {
                 pasRestants = 0;
@@ -361,7 +359,7 @@ public class BoucleDeJeu {
         int pasRestants = 999;
         while (pasRestants > 0 && !partie.estTerminee()) {
             afficherEcran();
-            String touche = saisie.lireLigne("Direction (" + pasRestants + " pas restants, z/q/s/d, x pour s'arreter) > ");
+            String touche = saisie.LireLaDirection("Direction (" + pasRestants + " pas restants, fleches ou z/q/s/d, x pour s'arreter) > ");
 
             if (touche.equals("x") || saisie.estTerminee()) {
                 pasRestants = 0;
