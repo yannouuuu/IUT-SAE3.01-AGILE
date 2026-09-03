@@ -4,8 +4,10 @@ public abstract class Carte {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
         return true;
     }
 
@@ -13,11 +15,11 @@ public abstract class Carte {
         Carte[] inventory = p.getCardInventory();
         for (Carte c : inventory) {
             if (c.equals(cDemander)) {
-                System.out.println(p.getNom() + " a cette carte.");
+                System.out.println(p.getPersonnage() + " a cette carte.");
                 return true;
             }
         }
-        System.out.println(p.getNom() + " n'a pas cette carte.");
+        System.out.println(p.getPersonnage() + " n'a pas cette carte.");
         return false;
     }
 

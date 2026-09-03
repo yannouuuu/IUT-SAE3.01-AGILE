@@ -13,7 +13,8 @@ public class CarteArme extends Carte {
 
     @Override
     public boolean equals(Object obj) {
-        if (!super.equals(obj)) return false;
+        if (!super.equals(obj))
+            return false;
         CarteArme other = (CarteArme) obj;
         return this.arme == other.arme;
     }
