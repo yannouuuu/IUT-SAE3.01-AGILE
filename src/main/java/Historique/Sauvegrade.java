@@ -8,6 +8,7 @@ import java.io.IOException;
 
 
 public class Sauvegrade {
+
     private String resultat;
 
     public Sauvegrade(String resultat){
@@ -22,7 +23,7 @@ public class Sauvegrade {
         }
     }
     
-    public String importer(String chemin) {
+    public static String importer(String chemin) {
         StringBuilder resultat = new StringBuilder();
 
         try(BufferedReader ficher = new BufferedReader(new FileReader(chemin))){
