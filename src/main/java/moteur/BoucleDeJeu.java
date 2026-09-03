@@ -165,7 +165,9 @@ public class BoucleDeJeu {
     private void jouerTourJoueur(Joueur joueur) {
         boolean tourFini = false;
         boolean deDejaLance = false;
-
+        if (joueur.peutAccuser()){
+            faireAccusationBot(joueur, joueur.quiAccuser());
+        }
         while (!tourFini && !partie.estTerminee()) {
             afficherEcran();
             System.out.println("--- A toi de jouer, " + joueur.getPersonnage() + " "
@@ -414,6 +416,7 @@ public class BoucleDeJeu {
             Carte montree = carteDansInventaire(autre, carteSuspect, carteArme, carteLieu);
             if (montree != null) {
                 rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
+                joueur.ajouterCoche(carteLieu);
                 dire(autre.getPersonnage() + " te montre une carte : " + montree
                         + " (cochee dans ton carnet).");
                 quelquUnAMontre = true;
@@ -542,6 +545,26 @@ public class BoucleDeJeu {
         }
         dire(bot.getPersonnage().pastille() + " " + bot.getPersonnage()
                 + " lance le de (" + valeur + ") et s'arrete " + arrivee + ".");
+    }
+    
+    private void faireAccusationBot(Joueur joueur, Object[] reponse){
+        System.out.println(joueur.getPersonnage() + " FAIT UNE ACCUSATION FINALE ! Bonne reponse = victoire, mauvaise = defaite.");
+        Suspects suspect = (Suspects) reponse[0];
+        Armes arme = (Armes) reponse[1];
+        Lieux lieu = (Lieux) reponse[2];
+        System.out.println("Il accuses : " + suspect + " avec " + arme + " dans " + lieu + ".");
+
+        boolean correcte = solutionContient(new CarteSuspect(suspect))
+                && solutionContient(new CarteArme(arme))
+                && solutionContient(new CarteLieu(lieu));
+
+        if (correcte) {
+            partie.terminer("Bravo " + joueur.getPersonnage() + ", tu as resolu l'enquete !\n" + solutionEnTexte());
+        } else {
+            partie.terminer("Rate, " + joueur.getPersonnage() + "... Tu es elimine !\nLa solution etait :\n" + solutionEnTexte());
+        
+    }
+
     }
 
     private void faireHypotheseBot(Bot joueur){
