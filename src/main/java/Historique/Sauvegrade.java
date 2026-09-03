@@ -19,6 +19,4 @@ public class Sauvegrade {
             file.write("\n");
         }
     }
-
-    
 }

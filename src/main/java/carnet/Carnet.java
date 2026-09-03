@@ -11,8 +11,8 @@ public class Carnet {
 
     public static final String[] SUSPECTS = {"Moutarde", "Rose", "Pervenche", "Violet", "Olive", "Leblanc"};
     public static final String[] ARMES    = {"Chandelier", "Corde", "Pistolet", "Couteau", "Clef anglaise", "Matraque"};
-    public static final String[] LIEUX    = {"Cuisine", "Salle a bal", "Salon", "Salle a manger",
-                                              "Bureau", "Bibliotheque", "Hall", "Veranda"};
+    public static final String[] LIEUX    = {"Cuisine", "Salle de bal", "Salon", "Salle a manger",
+                                              "Billard", "Bureau", "Bibliotheque", "Hall", "Veranda"};
 
     private final List<Entree> entrees = new ArrayList<>();
     private int selection;
@@ -57,8 +57,28 @@ public class Carnet {
 
     private void cocher() {
         Entree e = entrees.get(selection);
-        if (!e.estTitre()) {
+        if (!e.estTitre() && !e.estPossedee()) {
             e.toggleCoche();
+        }
+    }
+
+    /** Coche une carte en deduction, par exemple quand un joueur nous la montre. */
+    public void cocherCarte(String nom) {
+        for (Entree entree : entrees) {
+            boolean memeNom = !entree.estTitre() && entree.getNom().equalsIgnoreCase(nom);
+            if (memeNom) {
+                entree.cocher();
+            }
+        }
+    }
+
+    /** Marque une carte comme possedee par le joueur (ses cartes de depart). */
+    public void marquerPossedee(String nom) {
+        for (Entree entree : entrees) {
+            boolean memeNom = !entree.estTitre() && entree.getNom().equalsIgnoreCase(nom);
+            if (memeNom) {
+                entree.marquerPossedee();
+            }
         }
     }
 
@@ -90,16 +110,21 @@ public class Carnet {
         private final String nom;
         private final boolean titre;
         private boolean coche;
+        private boolean possedee;
 
         public Entree(String nom, boolean titre) {
-            this.nom   = nom;
-            this.titre = titre;
-            this.coche = false;
+            this.nom      = nom;
+            this.titre    = titre;
+            this.coche    = false;
+            this.possedee = false;
         }
 
-        public String getNom()      { return nom; }
-        public boolean estTitre()   { return titre; }
-        public boolean estCoche()   { return coche; }
-        public void toggleCoche()   { coche = !coche; }
+        public String getNom()        { return nom; }
+        public boolean estTitre()     { return titre; }
+        public boolean estCoche()     { return coche; }
+        public boolean estPossedee()  { return possedee; }
+        public void toggleCoche()     { coche = !coche; }
+        public void cocher()          { coche = true; }
+        public void marquerPossedee() { possedee = true; }
     }
 }

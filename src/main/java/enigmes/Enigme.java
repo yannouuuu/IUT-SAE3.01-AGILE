@@ -1,67 +1,58 @@
 package enigmes;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.io.InputStream;
 import java.util.Scanner;
-import java.io.FileNotFoundException;
-import java.io.File;
-import java.io.IOException;
 
+/**
+ * Une enigme donnee par un PNJ : une question dont la reponse est le nom
+ * de la salle ou se trouve la cle d'une porte fermee.
+ *
+ * Les textes des enigmes sont ranges dans resources/Enigme.csv
+ * (une ligne = "Salle,Enigme").
+ */
 public class Enigme {
 
-    private String salle;
-    private boolean porteFerme = false;
-    private List<String> phrases = new ArrayList<>();
-    private String enigmes = "./src/resources/Enigme.csv";
-    private String phrase = "./src/resources/Phrase.csv";
-    private Random random = new Random();
+    private final String question;
+    private final String salleDeLaCle;
 
-    public Enigme (String salle) {
-        this.salle = salle;
-        try (Scanner sc = new Scanner (new File (phrase))){
-            while (sc.hasNextLine()) {
-                phrases.add(sc.nextLine());
+    public Enigme(String question, String salleDeLaCle) {
+        this.question = question;
+        this.salleDeLaCle = salleDeLaCle;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public String getSalleDeLaCle() {
+        return salleDeLaCle;
+    }
+
+    /** Construit l'enigme de la salle demandee a partir du fichier Enigme.csv. */
+    public static Enigme pourSalle(String salleDeLaCle) {
+        InputStream fichier = Enigme.class.getResourceAsStream("/Enigme.csv");
+        if (fichier == null) {
+            throw new IllegalStateException("Enigme.csv introuvable dans les resources");
+        }
+
+        Scanner lecteur = new Scanner(fichier, "UTF-8");
+        lecteur.nextLine(); // on saute l'en-tete "Salle,Enigme"
+
+        while (lecteur.hasNextLine()) {
+            String ligne = lecteur.nextLine();
+            int virgule = ligne.indexOf(',');
+            if (virgule < 0) {
+                continue;
             }
-        } catch (FileNotFoundException e) {
-            System.err.println("Fichier Non Trouver.");
-        }
-    }
-
-    public String getSalle() {
-        return this.salle;
-    }
-
-    public void setPorteFerme (Boolean b) {
-        this.porteFerme = b;
-    }
-
-    public String getEnigme() throws FileNotFoundException, IOException {
-        String enigme = "";
-        String piece = "";
-        try (Scanner sc = new Scanner (new File (enigmes))) {
-            while (sc.hasNextLine() && !piece.equals(this.salle)) {
-                String ligne = sc.nextLine();
-                Scanner scan = new Scanner (ligne);
-                scan.useDelimiter(",");
-                piece = scan.next();
-                enigme = scan.next();
+            String salle = ligne.substring(0, virgule).trim();
+            String texte = ligne.substring(virgule + 1).trim();
+            if (salle.equals(salleDeLaCle)) {
+                lecteur.close();
+                return new Enigme(texte, salle);
             }
-        } catch (FileNotFoundException flfe) {
-            flfe.printStackTrace();
         }
-        return enigme;
-    }
 
-    public String getPhrase() {
-        return phrases.get(random.nextInt(phrases.size()-1)+1);
+        lecteur.close();
+        throw new IllegalArgumentException("Pas d'enigme pour la salle : " + salleDeLaCle);
     }
-
-    public String choisirSalle (String nomSalle) throws FileNotFoundException, IOException {
-        if (nomSalle.equals(this.salle) && porteFerme) {
-            return this.getEnigme();
-        }
-        return this.getPhrase();
-    }
-
 }
