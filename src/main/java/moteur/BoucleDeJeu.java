@@ -80,9 +80,7 @@ public class BoucleDeJeu {
         messages.add(message);
     }
 
-    // ------------------------------------------------------------------
     // Etat MENU
-    // ------------------------------------------------------------------
 
     private void faireMenu() {
         effacerEcran();
@@ -104,7 +102,6 @@ public class BoucleDeJeu {
         ItnitialiserPartie init = new ItnitialiserPartie();
 
         Object[] resultat = init.systemeDistribution();
-        @SuppressWarnings("unchecked")
         List<List<Carte>> inventaires = (List<List<Carte>>) resultat[0];
         Carte[] cartesCachees = (Carte[]) resultat[1];
 
@@ -145,10 +142,8 @@ public class BoucleDeJeu {
         return nomEnum.replace('_', ' ');
     }
 
-    // ------------------------------------------------------------------
     // Etat PARTIE : un appel = le tour d'un joueur
-    // ------------------------------------------------------------------
-
+    
     private void faireUnTour() {
         Joueur courant = tours.joueurCourant();
 
@@ -165,9 +160,7 @@ public class BoucleDeJeu {
         }
     }
 
-    // ------------------------------------------------------------------
     // Tour du joueur humain
-    // ------------------------------------------------------------------
 
     private void jouerTourJoueur(Joueur joueur) {
         boolean tourFini = false;
@@ -233,9 +226,7 @@ public class BoucleDeJeu {
         dire("  q          quitter la partie");
     }
 
-    // ------------------------------------------------------------------
     // De et deplacement
-    // ------------------------------------------------------------------
 
     private void lancerDeEtDeplacer(Joueur joueur) {
         int valeur = rendu.getPanneau().lancerDe();
@@ -382,9 +373,7 @@ public class BoucleDeJeu {
         arriveeDansSalle(joueur, destination);
     }
 
-    // ------------------------------------------------------------------
     // PNJ et enigmes
-    // ------------------------------------------------------------------
 
     private void parlerAuPnj(Joueur joueur) {
         String salle = partie.salleDuJoueur(joueur);
@@ -396,9 +385,7 @@ public class BoucleDeJeu {
         dire(pnj.dialogue());
     }
 
-    // ------------------------------------------------------------------
     // Hypothese : les autres joueurs montrent une carte s'ils en ont une
-    // ------------------------------------------------------------------
 
     private void faireHypothese(Joueur joueur) {
         String salle = partie.salleDuJoueur(joueur);
@@ -439,7 +426,7 @@ public class BoucleDeJeu {
         }
     }
 
-    /** Retourne la premiere carte de l'inventaire qui correspond a l'hypothese, ou null. */
+    /** Retourne la premiere carte de l'inventaire qui correspond a l'hypothese ou null. */
     private Carte carteDansInventaire(Joueur joueur, Carte... recherchees) {
         for (Carte carte : joueur.getCardInventory()) {
             for (Carte recherchee : recherchees) {
@@ -451,9 +438,7 @@ public class BoucleDeJeu {
         return null;
     }
 
-    // ------------------------------------------------------------------
     // Accusation finale
-    // ------------------------------------------------------------------
 
     private void faireAccusation(Joueur joueur) {
         System.out.println("ACCUSATION FINALE ! Bonne reponse = victoire, mauvaise = defaite.");
@@ -497,9 +482,7 @@ public class BoucleDeJeu {
         return sb.toString();
     }
 
-    // ------------------------------------------------------------------
     // Choix numerotes
-    // ------------------------------------------------------------------
 
     private Suspects choisirSuspect() {
         System.out.println("Quel suspect ?");
@@ -530,9 +513,7 @@ public class BoucleDeJeu {
         return partie.lieuPourSalle(SALLES[numero - 1]);
     }
 
-    // ------------------------------------------------------------------
     // Tour d'un bot : il lance le de et se deplace au hasard
-    // ------------------------------------------------------------------
 
     private void jouerTourBot(Bot bot) {
         int valeur = rendu.getPanneau().lancerDe();
@@ -567,8 +548,8 @@ public class BoucleDeJeu {
         String salle = partie.salleDuJoueur(joueur);
 
         System.out.println("Hypothese dans la salle : " + salle + " par "+joueur.getPersonnage());
-        Suspects suspect = Suspects.values()[1 + hasard.nextInt(5) - 1];
-        Armes arme = Armes.values()[1 + hasard.nextInt(5) - 1];
+        Suspects suspect = Suspects.values()[1+hasard.nextInt(5)];
+        Armes arme = Armes.values()[1 + hasard.nextInt(5)];
         Lieux lieu = partie.lieuPourSalle(salle);
 
         dire(joueur.getPersonnage()+" proposes : " + suspect + " avec " + arme + " dans " + lieu + ".");
@@ -577,7 +558,7 @@ public class BoucleDeJeu {
         CarteArme carteArme = new CarteArme(arme);
         CarteLieu carteLieu = new CarteLieu(lieu);
 
-        boolean quelquUnAMontre = false;
+        boolean quelquUnAMontre = false;    
         for (Joueur autre : partie.getJoueurs()) {
             // On ne demande jamais au joueur (bot) qui vient de faire l'hypothese
             if (autre == joueur) {
@@ -606,9 +587,7 @@ public class BoucleDeJeu {
         return false;
     }
 
-    // ------------------------------------------------------------------
     // Affichage : on efface le terminal puis on redessine tout l'ecran
-    // ------------------------------------------------------------------
 
     private void afficherEcran() {
         effacerEcran();
@@ -641,7 +620,6 @@ public class BoucleDeJeu {
      */
     private void effacerEcran() {
         System.out.print("\u001B[H\u001B[2J");
-        System.out.flush();
     }
 
     /** Une ligne qui rappelle quelle pastille correspond a quel personnage. */
@@ -658,9 +636,7 @@ public class BoucleDeJeu {
         return sb.toString();
     }
 
-    // ------------------------------------------------------------------
     // Etat FIN
-    // ------------------------------------------------------------------
 
     private void faireFin() {
         effacerEcran();
