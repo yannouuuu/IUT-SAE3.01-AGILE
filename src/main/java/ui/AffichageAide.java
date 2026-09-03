@@ -31,6 +31,7 @@ public final class AffichageAide {
                 "/passage   passage secret",
                 "/accuser   accusation finale",
                 "/fin       terminer ton tour",
+                "/save      sauvegarder la partie",
                 "q          quitter"
         );
 

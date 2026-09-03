@@ -261,8 +261,8 @@ public class BoucleDeJeu {
             } else if (commande ==  Commandes.Type.SAVE){
                 System.out.println("entrez le nom sauvegarde :");
                 Scanner scan = new Scanner(System.in);
-                String fileNom = scan.toString();
-                String information = "1Position "+joueur.getPosition()+" , "+joueur.getCardInventory().toString()+") (2Position "+bot1.getPosition()+" , "+bot1.getCardInventory().toString()+") (3Position "+bot2.getPosition()+" , "+bot2.getCardInventory().toString()+") ( 4Position "+bot3.getPosition()+" , "+bot3.getCardInventory().toString()+")";
+                String fileNom = scan.nextLine();
+                String information = "1Position "+joueur.toString()+" 2Position "+bot1.toString()+" 3Position "+bot2.toString()+" 4Position "+bot3.toString()+")";
                 Sauvegarde save = new Sauvegarde(information);
                 save.sauvegrade("/home/infoetu/mohammad-shafi.omar.etu/groupe-7/sauvegarde/"+fileNom+".csv");
             } else {

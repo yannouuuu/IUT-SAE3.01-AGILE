@@ -100,6 +100,10 @@ public class Joueur {
 
     @Override
     public String toString() {
-        return personnage + " Ligne " + x + " colonne " + y;
+        String tab = "" ;
+        for( int i = 0 ; i < cardInventory.length ; i++){
+            tab = cardInventory[i].toString();
+        }
+        return personnage + " Ligne " + x + " colonne " + y +"("+tab+")";
     }
 }
