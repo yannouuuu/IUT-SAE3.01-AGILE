@@ -17,15 +17,18 @@ import ui.Marqueur;
 import ui.Menu;
 import ui.Rendu;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+import Historique.Sauvegarde;
+
 /** Machine a etats du jeu : Menu -> Partie -> Fin. */
 public class BoucleDeJeu {
 
-    private enum Etat { MENU, PARTIE, FIN, ARRET }
+    private enum Etat { MENU, LOAD, PARTIE, FIN, ARRET }
 
     /** Les salles du plateau, dans l'ordre propose au joueur pour l'accusation. */
     private static final String[] SALLES = {
@@ -71,6 +74,9 @@ public class BoucleDeJeu {
                 faireUnTour();
             } else if (etat == Etat.FIN) {
                 faireFin();
+            } else if (etat == Etat.LOAD){
+                faireLOAD();
+
             }
         }
     }
@@ -79,7 +85,20 @@ public class BoucleDeJeu {
     private void dire(String message) {
         messages.add(message);
     }
-
+    
+    private void faireLOAD(){
+        effacerEcran();
+        String load = Sauvegarde.importer("/home/infoetu/mohammad-shafi.omar.etu/groupe-7/sauvegarde/save.csv");
+        System.out.println(load);
+        System.out.println("pour sortir click sur q ");
+        Scanner clavir = new Scanner(System.in);
+        String sortie = "";
+        while( !sortie.equals("q")){
+            sortie = clavir.nextLine(); 
+        }
+        etat = Etat.MENU;
+      
+    }
     // ------------------------------------------------------------------
     // Etat MENU
     // ------------------------------------------------------------------
@@ -92,13 +111,17 @@ public class BoucleDeJeu {
             etat = Etat.PARTIE;
         } else if (choix.equals("2")) {
             System.out.println("Le multijoueur arrive bientot !");
+        } else if (choix.equals("3")){  
+            etat = Etat.LOAD;
         } else if (choix.equals("q")) {
             System.out.println("Au revoir !");
             etat = Etat.ARRET;
         } else {
-            System.out.println("Choix inconnu, tape 1, 2 ou q.");
+            System.out.println("Choix inconnu, tape 1, 2, 3 ou q.");
         }
     }
+
+
 
     private void preparerPartie() {
         ItnitialiserPartie init = new ItnitialiserPartie();
@@ -151,11 +174,16 @@ public class BoucleDeJeu {
 
     private void faireUnTour() {
         Joueur courant = tours.joueurCourant();
+        Joueur[] s = tours.getJoueurs();
+        Joueur bot1 = s[1];
+        Joueur bot2 = s[2];
+        Joueur bot3 = s[3];
+        
 
         if (tours.estUnBot()) {
             jouerTourBot((Bot) courant);
         } else {
-            jouerTourJoueur(courant);
+            jouerTourJoueur(courant,bot1,bot2,bot3);
         }
 
         if (partie.estTerminee()) {
@@ -169,7 +197,7 @@ public class BoucleDeJeu {
     // Tour du joueur humain
     // ------------------------------------------------------------------
 
-    private void jouerTourJoueur(Joueur joueur) {
+    private void jouerTourJoueur(Joueur joueur,Joueur bot1,Joueur bot2,Joueur bot3) {
         boolean tourFini = false;
         boolean deDejaLance = false;
 
@@ -207,7 +235,14 @@ public class BoucleDeJeu {
                 partie.terminer("Partie abandonnee. La solution etait :\n" + solutionEnTexte());
             } else if (commande == Commandes.Type.CHEAT_MOUVEMENT){
                 cheatMouvement(joueur);
-            }else {
+            } else if (commande ==  Commandes.Type.SAVE){
+                System.out.println("entrez le nom sauvegarde :");
+                Scanner scan = new Scanner(System.in);
+                String fileNom = scan.toString();
+                String information = "1Position "+joueur.getPosition()+" , "+joueur.getCardInventory().toString()+") (2Position "+bot1.getPosition()+" , "+bot1.getCardInventory().toString()+") (3Position "+bot2.getPosition()+" , "+bot2.getCardInventory().toString()+") ( 4Position "+bot3.getPosition()+" , "+bot3.getCardInventory().toString()+")";
+                Sauvegarde save = new Sauvegarde(information);
+                save.sauvegrade("/home/infoetu/mohammad-shafi.omar.etu/groupe-7/sauvegarde/"+fileNom+".csv");
+            } else {
                 boolean consommee = rendu.getPanneau().traiter(texte);
                 if (!consommee) {
                     dire("Commande inconnue. Tape /aide pour voir la liste.");
@@ -230,6 +265,7 @@ public class BoucleDeJeu {
         dire("  /passage   prendre le passage secret de la salle ou tu es");
         dire("  /accuser   accusation finale : bonne = victoire, mauvaise = defaite !");
         dire("  /fin       terminer ton tour");
+        dire("  /save      pour sauvegarder la partie");
         dire("  q          quitter la partie");
     }
 
@@ -448,7 +484,7 @@ public class BoucleDeJeu {
             }
         }
         return null;
-    }
+    }TourBot
 
     // ------------------------------------------------------------------
     // Accusation finale
@@ -466,7 +502,7 @@ public class BoucleDeJeu {
         Armes arme = choisirArme();
         Lieux lieu = choisirLieu();
 
-        System.out.println("Tu accuses : " + suspect + " avec " + arme + " dans " + lieu + ".");
+        TourBotSystem.out.println("Tu accuses : " + suspect + " avec " + arme + " dans " + lieu + ".");
 
         boolean correcte = solutionContient(new CarteSuspect(suspect))
                 && solutionContient(new CarteArme(arme))
@@ -599,7 +635,7 @@ public class BoucleDeJeu {
         // Les messages depuis le dernier rafraichissement, puis on repart a zero
         for (String message : messages) {
             System.out.println(message);
-        }
+        }     etat = Etat.MENU;
         messages.clear();
     }
 

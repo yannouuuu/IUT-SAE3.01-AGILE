@@ -15,7 +15,8 @@ public class Commandes {
         AIDE,
         QUITTER,
         AUTRE,
-        CHEAT_MOUVEMENT
+        CHEAT_MOUVEMENT,
+        SAVE
     }
 
     public static Type interpreter(String saisie) {
@@ -52,6 +53,9 @@ public class Commandes {
         }
         if (texte.equals("/cheat_mouvement")){
             return Type.CHEAT_MOUVEMENT;
+        }
+        if (texte.equals("/save")){
+            return Type.SAVE;
         }
         return Type.AUTRE;
     }

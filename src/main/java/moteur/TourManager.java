@@ -21,6 +21,10 @@ public class TourManager {
         return joueurCourant() instanceof Bot;
     }
 
+    public Joueur[] getJoueurs() {
+        return joueurs;
+    }
+
     public void joueurSuivant() {
         indexCourant = indexCourant + 1;
         if (indexCourant >= joueurs.length) {

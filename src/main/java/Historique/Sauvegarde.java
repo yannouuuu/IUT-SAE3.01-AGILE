@@ -7,19 +7,21 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 
-public class Sauvegrade {
+public class Sauvegarde extends Exception{
 
     private String resultat;
 
-    public Sauvegrade(String resultat){
+    public Sauvegarde(String resultat){
          this.resultat = resultat;
     }
 
 
-    public void sauvegrade(String chemin) throws IOException{
+    public void sauvegrade(String chemin){
         try(FileWriter file = new FileWriter(new File(chemin))){
             file.write(this.resultat);
             file.write("\n");
+        }catch(IOException e){
+            e.printStackTrace();
         }
     }
     
@@ -32,6 +34,7 @@ public class Sauvegrade {
             while((ligne = ficher.readLine())!= null){
                 resultat.append(ligne).append("\n");
             }
+            
         } catch ( IOException e){
             e.printStackTrace();
         }

@@ -10,6 +10,7 @@ public class Menu {
         System.out.println();
         System.out.println("  1 - Solo (contre des bots)");
         System.out.println("  2 - Multijoueur (bientot)");
+        System.out.println("  3 - Charger ");
         System.out.println("  q - Quitter");
         System.out.println();
         System.out.print("> ");

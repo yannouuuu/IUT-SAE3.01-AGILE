@@ -34,6 +34,10 @@ public class Joueur {
         this.y = y;
     }
 
+    public String getPosition(){
+        return "("+this.x+","+this.y+")";
+    }
+
     public void setPosition(int x, int y) {
         setX(x);
         setY(y);
