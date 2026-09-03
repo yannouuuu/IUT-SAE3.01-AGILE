@@ -1,3 +1,5 @@
+package enigmes;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -11,8 +13,8 @@ public class Enigme {
     private String salle;
     private boolean porteFerme = false;
     private List<String> phrases = new ArrayList<>();
-    private String enigmes = "./res/Enigme.csv";
-    private String phrase = "./res/Phrase.csv";
+    private String enigmes = "./src/resources/Enigme.csv";
+    private String phrase = "./src/resources/Phrase.csv";
     private Random random = new Random();
 
     public Enigme (String salle) {
