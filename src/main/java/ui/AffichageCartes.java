@@ -13,8 +13,8 @@ import java.util.List;
 public class AffichageCartes {
 
     private static final String JAUNE = "\u001B[33m";
-    private static final String GRIS  = "\u001B[90m";
     private static final String RESET = "\u001B[0m";
+    private static final String BLANC = "\u001B[97m";
 
     private static final int CARTES_PAR_LIGNE = 6;
     private static final int ESPACE_ENTRE_CARTES = 2;
@@ -26,7 +26,7 @@ public class AffichageCartes {
         lignes.add("");
 
         if (clesCartes.isEmpty()) {
-            lignes.add(GRIS + "(aucune carte)" + RESET);
+            lignes.add(BLANC + "(aucune carte)" + RESET);
         } else {
             for (int debut = 0; debut < clesCartes.size(); debut += CARTES_PAR_LIGNE) {
                 int fin = Math.min(debut + CARTES_PAR_LIGNE, clesCartes.size());
@@ -53,18 +53,12 @@ public class AffichageCartes {
 
         String espace = " ".repeat(ESPACE_ENTRE_CARTES);
         List<String> lignes = new ArrayList<>();
-        
         for (int y = 0; y < hauteur; y++) {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < dessins.size(); i++) {
                 List<String> dessin = dessins.get(i);
-
-                String morceau = "";
-                if (y < dessin.size()) {
-                    morceau = dessin.get(y);
-                }
-
-                sb.append(GRIS).append(pad(morceau, CartesArt.largeur())).append(RESET);
+                String morceau = y < dessin.size() ? dessin.get(y) : "";
+                sb.append(BLANC).append(pad(morceau, CartesArt.largeur())).append(RESET);
                 if (i < dessins.size() - 1) {
                     sb.append(espace);
                 }
