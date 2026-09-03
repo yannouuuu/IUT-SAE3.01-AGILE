@@ -32,7 +32,9 @@ public final class AffichageAide {
                 "/accuser   accusation finale",
                 "/fin       terminer ton tour",
                 "/save      sauvegarder la partie",
+                "/musique   couper / remettre la musique",
                 "q          quitter"
+            
         );
 
         int largeur = 0;

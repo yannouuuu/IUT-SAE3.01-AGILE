@@ -23,6 +23,7 @@ import ui.Marqueur;
 import ui.Menu;
 import ui.Rendu;
 
+
 /** Machine a etats du jeu : Menu -> Partie -> Fin. */
 public class BoucleDeJeu {
 
@@ -51,6 +52,7 @@ public class BoucleDeJeu {
     private final Saisie saisie;
     private final Rendu rendu = new Rendu();
     private final Random hasard = new Random();
+    private final son.Musique musique = new son.Musique();
 
     /** Les messages a afficher sous la map au prochain rafraichissement. */
     private final List<String> messages = new ArrayList<>();
@@ -65,6 +67,7 @@ public class BoucleDeJeu {
     }
 
     public void lancer() {
+        musique.demarrer();
         while (etat != Etat.ARRET) {
             if (etat == Etat.MENU) {
                 faireMenu();
@@ -263,6 +266,9 @@ public class BoucleDeJeu {
                 String information = "1Position "+joueur.toString()+" 2Position "+bot1.toString()+" 3Position "+bot2.toString()+" 4Position "+bot3.toString()+")";
                 Sauvegarde save = new Sauvegarde(information);
                 save.sauvegrade("./sauvegarde/"+fileNom+".csv");
+            } else if (commande == Commandes.Type.MUSIQUE) {
+                musique.basculer();
+                dire("Musique coupee ou remise.");
             } else {
                 boolean consommee = rendu.getPanneau().traiter(texte);
                 if (!consommee) {
