@@ -549,8 +549,8 @@ public class BoucleDeJeu {
         String salle = partie.salleDuJoueur(joueur);
 
         System.out.println("Hypothese dans la salle : " + salle + " par "+joueur.getPersonnage());
-        Suspects suspect = Suspects.values()[1 + hasard.nextInt(6)];
-        Armes arme = Armes.values()[1 + hasard.nextInt(6)];
+        Suspects suspect = Suspects.values()[1+hasard.nextInt(5)];
+        Armes arme = Armes.values()[1 + hasard.nextInt(5)];
         Lieux lieu = partie.lieuPourSalle(salle);
 
         dire(joueur.getPersonnage()+" proposes : " + suspect + " avec " + arme + " dans " + lieu + ".");
@@ -559,7 +559,7 @@ public class BoucleDeJeu {
         CarteArme carteArme = new CarteArme(arme);
         CarteLieu carteLieu = new CarteLieu(lieu);
 
-        boolean quelquUnAMontre = false;
+        boolean quelquUnAMontre = false;    
         for (Joueur autre : partie.getJoueurs()) {
             if (!autre.getPersonnage().equals(joueur.getPersonnage())){
                 Carte montree = carteDansInventaire(autre, new Carte[]{carteSuspect, carteArme, carteLieu});
