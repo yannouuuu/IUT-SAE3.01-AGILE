@@ -1,4 +1,4 @@
-# Sprint 3
+# Sprint 4
 
 Scrum Master : Chloé Tison
 
@@ -8,7 +8,7 @@ Scrum Master : Chloé Tison
 Nous avons rendu le dé ainsi que la vu du dé, la vue sur le carnet, la création des cartes incluant la distribution des cartes ainsi que la demande d'une carte à un joueur.
 
 ### Ce que nous allons faire durant le prochain sprint
-La création des cartes, incluant le faît de demander à un joueur une carte, le positionnement du joueur, le dé et la vue du dé, la vue du carnet.
+Pouvoir initialiser une partie et faire la grille logique.
 
 ## Rétrospective
 
@@ -17,20 +17,20 @@ On commence petit à petit à tout rassembler, incluant les cartes dans le jeu, 
 * Qu'est ce qu'il s'est parfaitement bien passé pendant le sprint (démo, rétro, organisation, répartition des US, répartition des taches, prédictibilité, technique, git, java, ide, etc.)
 Le carnet fonctionne parfaitement bien et s'affiche bien à l'endroit voulu. Pour le dé l'affichage est super. Tout le monde a bien travailler entre eux, une bonne avancée a été faite.
 * Qu’est-ce qui m'a irrité ? dérangé ?
-Au final on avait pas grand chose à montrer malgrès tout ce qu'on à coder.
+Problème dans le git.
 
 ### PDCA
 * Quel sujet souhaitons nous améliorer ? (1 seul)
-L'intéractivité.
+Gérer l'ascii moche.
 * Comment améliorer (3 options recommandés)
-Faire le positionnement et les actions reliée à d'autre UE.
+Rechercher un meilleur ascii, essayer une autre police d'écriture.
 * Quelle action mettons nous en place sur le prochain sprint ?
-Les actions utilisateur.
+Résoudre le probème git.
 
 # Mémo
 N’oubliez pas d’ajouter une photo du radiateur d’information (kanban + BurnUp) au moment de la rétrospective.
 
 ## Radiateur d'information
 
-![Radiateur d'information]()
-![Radiateur d'information]()
+![Radiateur d'information](radiateur01.png)
+![Radiateur d'information](radiateur02.png)
