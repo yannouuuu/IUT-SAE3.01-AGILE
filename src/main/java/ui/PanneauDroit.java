@@ -22,16 +22,23 @@ public class PanneauDroit {
         valeurDe = 0;
     }
 
-    public void lancerDe() {
+    /** Lance le de : sa face remplace le carnet, et la valeur est retournee. */
+    public int lancerDe() {
         valeurDe = de.lancer();
+        return valeurDe;
     }
 
     public boolean surCarnet() {
         return carnet.estOuvert();
     }
 
-    public void traiter(String saisie) {
-        carnet.traiter(saisie);
+    public Carnet getCarnet() {
+        return carnet;
+    }
+
+    /** Retourne true si la saisie a ete consommee par le carnet. */
+    public boolean traiter(String saisie) {
+        return carnet.traiter(saisie);
     }
 
     public List<String> lignes() {
@@ -43,8 +50,8 @@ public class PanneauDroit {
 
     public String aide() {
         if (carnet.estOuvert()) {
-            return "+ Saisie (Espace = cocher, z/s = naviguer, /map = revenir, q = quitter) > ";
+            return "+ Saisie (Espace = cocher, z/s = naviguer, /map = revenir) > ";
         }
-        return "+ Saisie (/carnet = ouvrir le carnet, /de = lancer le de, q = quitter) > ";
+        return "+ Saisie (/de, /carnet, /fin, /aide, q = quitter) > ";
     }
 }
