@@ -35,7 +35,7 @@ public class Saisie {
 
     public static String normaliserDirection(String ligne) {
         if (ligne.endsWith("[A"))
-            return "Z";
+            return "z";
         if (ligne.endsWith("[B"))
             return "s";
         if (ligne.endsWith("[D"))
