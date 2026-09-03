@@ -82,6 +82,8 @@ public class Joueur {
             armeCoche.add((Armes) obj);
         } else if (obj.getClass().equals(Suspects.class)){
             suspectsCoche.add((Suspects) obj);
+        } else if (obj.getClass().equals(Lieux.class)){
+            lieuxCoche.add((Lieux) obj);
         }
     }
 
