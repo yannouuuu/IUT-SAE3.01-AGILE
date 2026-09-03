@@ -1,3 +1,5 @@
+package moteur;
+
 import modele.*;
 
 import java.util.ArrayList;
@@ -5,24 +7,19 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 
 public class ItnitialiserPartie {
 
-    public String demandePerso(Scanner sc) {
-        System.out.print("Entrez le nom du joueur : ");
-        return sc.nextLine();
-    }
-
-    public Joueur[] creerJoueurs(String nomJoueur, List<List<Carte>> inventaires) {
+    public Joueur[] creerJoueurs(List<List<Carte>> inventaires) {
 
         List<Suspects> suspects = new ArrayList<>(Arrays.asList(Suspects.values()));
         Collections.shuffle(suspects);
 
-        Joueur joueur = new Joueur(nomJoueur, inventaires.get(0).toArray(new Carte[0]));
-        Bot b1 = new Bot(suspects.get(0).name(), inventaires.get(1).toArray(new Carte[0]));
-        Bot b2 = new Bot(suspects.get(1).name(), inventaires.get(2).toArray(new Carte[0]));
-        Bot b3 = new Bot(suspects.get(2).name(), inventaires.get(3).toArray(new Carte[0]));
+        // Chaque joueur incarne un personnage tire au hasard, qui donne sa pastille
+        Joueur joueur = new Joueur(suspects.get(0), inventaires.get(0).toArray(new Carte[0]));
+        Bot b1 = new Bot(suspects.get(1), inventaires.get(1).toArray(new Carte[0]));
+        Bot b2 = new Bot(suspects.get(2), inventaires.get(2).toArray(new Carte[0]));
+        Bot b3 = new Bot(suspects.get(3), inventaires.get(3).toArray(new Carte[0]));
 
         return new Joueur[]{joueur, b1, b2, b3};
     }
@@ -73,16 +70,22 @@ public class ItnitialiserPartie {
 
         Carte[] cachees = tirerCartesCachees();
 
-        toutes.removeIf(c ->
-            c.equals(cachees[0]) ||
-            c.equals(cachees[1]) ||
-            c.equals(cachees[2])
-        );
+        // On retire les cartes cachÃ©es de la liste avec une boucle classique
+        List<Carte> restantes = new ArrayList<>();
+        for (Carte c : toutes) {
+            boolean estCachee = c.equals(cachees[0])
+                    || c.equals(cachees[1])
+                    || c.equals(cachees[2]);
+            if (!estCachee) {
+                restantes.add(c);
+            }
+        }
 
-        List<List<Carte>> inventaires = distribuerCartes(toutes);
+        List<List<Carte>> inventaires = distribuerCartes(restantes);
 
         return new Object[]{inventaires, cachees};
     }
+
 
     public static List<Carte> creerToutesLesCartes() {
         List<Carte> cartes = new ArrayList<>();
