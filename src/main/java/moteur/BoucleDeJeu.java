@@ -22,17 +22,9 @@ import ui.Marqueur;
 import ui.Menu;
 import ui.Rendu;
 
-<<<<<<< HEAD
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
 
 import Historique.Sauvegarde;
 
-=======
->>>>>>> e224caf2b820859848452ea99dce29a95ef513a8
 /** Machine a etats du jeu : Menu -> Partie -> Fin. */
 public class BoucleDeJeu {
 
@@ -93,25 +85,21 @@ public class BoucleDeJeu {
     private void dire(String message) {
         messages.add(message);
     }
-<<<<<<< HEAD
     
     private void faireLOAD(){
         effacerEcran();
         String load = Sauvegarde.importer("/home/infoetu/mohammad-shafi.omar.etu/groupe-7/sauvegarde/save.csv");
         System.out.println(load);
         System.out.println("pour sortir click sur q ");
-        Scanner clavir = new Scanner(System.in);
+        Scanner clavier = new Scanner(System.in);
         String sortie = "";
         while( !sortie.equals("q")){
-            sortie = clavir.nextLine(); 
+            sortie = clavier.nextLine(); 
         }
         etat = Etat.MENU;
       
     }
     // ------------------------------------------------------------------
-=======
-
->>>>>>> e224caf2b820859848452ea99dce29a95ef513a8
     // Etat MENU
 
     private void faireMenu() {
@@ -528,7 +516,7 @@ public class BoucleDeJeu {
             }
         }
         return null;
-    }TourBot
+    }
 
     // Accusation finale
 
@@ -544,7 +532,7 @@ public class BoucleDeJeu {
         Armes arme = choisirArme();
         Lieux lieu = choisirLieu();
 
-        TourBotSystem.out.println("Tu accuses : " + suspect + " avec " + arme + " dans " + lieu + ".");
+        System.out.println("Tu accuses : " + suspect + " avec " + arme + " dans " + lieu + ".");
 
         boolean correcte = solutionContient(new CarteSuspect(suspect))
                 && solutionContient(new CarteArme(arme))
