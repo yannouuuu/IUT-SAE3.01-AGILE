@@ -7,6 +7,7 @@ public class Commandes {
         DE,
         CARNET,
         MAP,
+        CARTES,
         PARLER,
         HYPOTHESE,
         ACCUSER,
@@ -29,6 +30,9 @@ public class Commandes {
         }
         if (texte.equals("/map")) {
             return Type.MAP;
+        }
+        if (texte.equals("/cartes")) {
+            return Type.CARTES;
         }
         if (texte.equals("/parler")) {
             return Type.PARLER;
