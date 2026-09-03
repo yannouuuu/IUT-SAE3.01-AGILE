@@ -562,7 +562,7 @@ public class BoucleDeJeu {
         boolean quelquUnAMontre = false;
         for (Joueur autre : partie.getJoueurs()) {
             if (!autre.getPersonnage().equals(joueur.getPersonnage())){
-                Carte montree = carteDansInventaire(autre, carteSuspect, carteArme, carteLieu);
+                Carte montree = carteDansInventaire(autre, new Carte[]{carteSuspect, carteArme, carteLieu});
                 if (montree != null) {
                     rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
                     quelquUnAMontre = true;
