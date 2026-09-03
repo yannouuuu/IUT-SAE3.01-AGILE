@@ -264,7 +264,7 @@ public class BoucleDeJeu {
                 String fileNom = scan.nextLine();
                 String information = "1Position "+joueur.toString()+" 2Position "+bot1.toString()+" 3Position "+bot2.toString()+" 4Position "+bot3.toString()+")";
                 Sauvegarde save = new Sauvegarde(information);
-                save.sauvegrade("/home/infoetu/mohammad-shafi.omar.etu/groupe-7/sauvegarde/"+fileNom+".csv");
+                save.sauvegrade("./sauvegarde/"+fileNom+".csv");
             } else {
                 boolean consommee = rendu.getPanneau().traiter(texte);
                 if (!consommee) {
