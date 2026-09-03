@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+import Historique.Sauvegarde;
 import interaction.Commandes;
 import interaction.Pnj;
 import interaction.Saisie;
@@ -22,13 +23,12 @@ import ui.Marqueur;
 import ui.Menu;
 import ui.Rendu;
 
-
-import Historique.Sauvegarde;
-
 /** Machine a etats du jeu : Menu -> Partie -> Fin. */
 public class BoucleDeJeu {
 
-    private enum Etat { MENU, LOAD, PARTIE, FIN, ARRET }
+    private enum Etat {
+        MENU, LOAD, PARTIE, FIN, ARRET
+    }
 
     /** Les salles du plateau, dans l'ordre propose au joueur pour l'accusation. */
     private static final String[] SALLES = {
@@ -39,14 +39,16 @@ public class BoucleDeJeu {
 
     /**
      * Points de depart des pions, colles aux bordures comme sur le vrai plateau :
-     * a gauche entre Cuisine et Salle a manger, a gauche entre Salle a manger et Salon,
-     * a droite entre Veranda et Bibliotheque, a droite entre Bibliotheque et Bureau.
+     * a gauche entre Cuisine et Salle a manger, a gauche entre Salle a manger et
+     * Salon,
+     * a droite entre Veranda et Bibliotheque, a droite entre Bibliotheque et
+     * Bureau.
      */
     private static final int[][] DEPARTS = {
-            {4, 0},   // bordure gauche, entre Cuisine et Salle a manger
-            {10, 0},  // bordure gauche, entre Salle a manger et Salon
-            {4, 39},  // bordure droite, entre Veranda et Bibliotheque
-            {10, 39}, // bordure droite, entre Bibliotheque et Bureau
+            { 4, 0 }, // bordure gauche, entre Cuisine et Salle a manger
+            { 10, 0 }, // bordure gauche, entre Salle a manger et Salon
+            { 4, 39 }, // bordure droite, entre Veranda et Bibliotheque
+            { 10, 39 }, // bordure droite, entre Bibliotheque et Bureau
     };
 
     private final Scanner clavier;
@@ -74,30 +76,32 @@ public class BoucleDeJeu {
                 faireUnTour();
             } else if (etat == Etat.FIN) {
                 faireFin();
-            } else if (etat == Etat.LOAD){
+            } else if (etat == Etat.LOAD) {
                 faireLOAD();
 
             }
         }
     }
 
-    /** Ajoute un message qui sera affiche sous la map au prochain rafraichissement. */
+    /**
+     * Ajoute un message qui sera affiche sous la map au prochain rafraichissement.
+     */
     private void dire(String message) {
         messages.add(message);
     }
-    
-    private void faireLOAD(){
+
+    private void faireLOAD() {
         effacerEcran();
         String load = Sauvegarde.importer("/home/infoetu/mohammad-shafi.omar.etu/groupe-7/sauvegarde/save.csv");
         System.out.println(load);
         System.out.println("pour sortir click sur q ");
         Scanner clavier = new Scanner(System.in);
         String sortie = "";
-        while( !sortie.equals("q")){
-            sortie = clavier.nextLine(); 
+        while (!sortie.equals("q")) {
+            sortie = clavier.nextLine();
         }
         etat = Etat.MENU;
-      
+
     }
     // ------------------------------------------------------------------
     // Etat MENU
@@ -110,7 +114,7 @@ public class BoucleDeJeu {
             etat = Etat.PARTIE;
         } else if (choix.equals("2")) {
             System.out.println("Le multijoueur arrive bientot !");
-        } else if (choix.equals("3")){  
+        } else if (choix.equals("3")) {
             etat = Etat.LOAD;
         } else if (choix.equals("q")) {
             System.out.println("Au revoir !");
@@ -119,8 +123,6 @@ public class BoucleDeJeu {
             System.out.println("Choix inconnu, tape 1, 2, 3 ou q.");
         }
     }
-
-
 
     private void preparerPartie() {
         ItnitialiserPartie init = new ItnitialiserPartie();
@@ -141,7 +143,8 @@ public class BoucleDeJeu {
         // Nouvelle partie : on efface les coches/possessions de la partie precedente
         rendu.getPanneau().getCarnet().reinitialiser();
 
-        // Les cartes du joueur sont hors de cause : on les coche d'office dans le carnet
+        // Les cartes du joueur sont hors de cause : on les coche d'office dans le
+        // carnet
         cocherCartesDansLeCarnet(joueurs[0]);
 
         Suspects personnage = joueurs[0].getPersonnage();
@@ -149,7 +152,8 @@ public class BoucleDeJeu {
         dire("Tes " + joueurs[0].getCardInventory().length
                 + " cartes de depart sont deja cochees dans ton carnet (/carnet pour les voir).");
 
-        // Avant meme d'afficher la map pour la premiere fois on montre ses cartes de depart au joueur
+        // Avant meme d'afficher la map pour la premiere fois on montre ses cartes de
+        // depart au joueur
         afficherCartesJoueursTemporairement(joueurs[0]);
     }
 
@@ -172,7 +176,10 @@ public class BoucleDeJeu {
         return nomEnum.replace('_', ' ');
     }
 
-    /** Les cles des cartes du joueur ("SUSPECT:MOUTARDE", ...), pour retrouver leur dessin dans AffichageCartes. */
+    /**
+     * Les cles des cartes du joueur ("SUSPECT:MOUTARDE", ...), pour retrouver leur
+     * dessin dans AffichageCartes.
+     */
     private List<String> clesCartes(Joueur joueur) {
         List<String> cles = new ArrayList<>();
         for (Carte carte : joueur.getCardInventory()) {
@@ -193,19 +200,18 @@ public class BoucleDeJeu {
     }
 
     // Etat PARTIE : un appel = le tour d'un joueur
-    
+
     private void faireUnTour() {
         Joueur courant = tours.joueurCourant();
         Joueur[] s = tours.getJoueurs();
         Joueur bot1 = s[1];
         Joueur bot2 = s[2];
         Joueur bot3 = s[3];
-        
 
         if (tours.estUnBot()) {
             jouerTourBot((Bot) courant);
         } else {
-            jouerTourJoueur(courant,bot1,bot2,bot3);
+            jouerTourJoueur(courant, bot1, bot2, bot3);
         }
 
         if (partie.estTerminee()) {
@@ -217,7 +223,7 @@ public class BoucleDeJeu {
 
     // Tour du joueur humain
 
-    private void jouerTourJoueur(Joueur joueur,Joueur bot1,Joueur bot2,Joueur bot3) {
+    private void jouerTourJoueur(Joueur joueur, Joueur bot1, Joueur bot2, Joueur bot3) {
         boolean tourFini = false;
         boolean deDejaLance = false;
 
@@ -256,15 +262,16 @@ public class BoucleDeJeu {
                 direAide();
             } else if (commande == Commandes.Type.QUITTER) {
                 partie.terminer("Partie abandonnee. La solution etait :\n" + solutionEnTexte());
-            } else if (commande == Commandes.Type.CHEAT_MOUVEMENT){
+            } else if (commande == Commandes.Type.CHEAT_MOUVEMENT) {
                 cheatMouvement(joueur);
-            } else if (commande ==  Commandes.Type.SAVE){
+            } else if (commande == Commandes.Type.SAVE) {
                 System.out.println("entrez le nom sauvegarde :");
                 Scanner scan = new Scanner(System.in);
                 String fileNom = scan.nextLine();
-                String information = "1Position "+joueur.toString()+" 2Position "+bot1.toString()+" 3Position "+bot2.toString()+" 4Position "+bot3.toString()+")";
+                String information = "1Position " + joueur.toString() + " 2Position " + bot1.toString() + " 3Position "
+                        + bot2.toString() + " 4Position " + bot3.toString() + ")";
                 Sauvegarde save = new Sauvegarde(information);
-                save.sauvegrade("./sauvegarde/"+fileNom+".csv");
+                save.sauvegrade("./sauvegarde/" + fileNom + ".csv");
             } else {
                 boolean consommee = rendu.getPanneau().traiter(texte);
                 if (!consommee) {
@@ -314,7 +321,10 @@ public class BoucleDeJeu {
         int pasRestants = valeur;
         while (pasRestants > 0 && !partie.estTerminee()) {
             afficherEcran();
-            String touche = saisie.lireLigne("Direction (" + pasRestants + " pas restants, z/q/s/d, x pour s'arreter) > ");
+            String touche = saisie
+                    .LireLaDirection(
+                            "Direction (" + pasRestants
+                                    + " pas restants, fleches du clavier ou z/q/s/d , x pour s'arreter) > ");
 
             if (touche.equals("x") || saisie.estTerminee()) {
                 pasRestants = 0;
@@ -356,12 +366,12 @@ public class BoucleDeJeu {
         rendu.getPanneau().revenirMap();
     }
 
-
     private void cheatMouvement(Joueur joueur) {
         int pasRestants = 999;
         while (pasRestants > 0 && !partie.estTerminee()) {
             afficherEcran();
-            String touche = saisie.lireLigne("Direction (" + pasRestants + " pas restants, z/q/s/d, x pour s'arreter) > ");
+            String touche = saisie
+                    .lireLigne("Direction (" + pasRestants + " pas restants, z/q/s/d, x pour s'arreter) > ");
 
             if (touche.equals("x") || saisie.estTerminee()) {
                 pasRestants = 0;
@@ -486,27 +496,29 @@ public class BoucleDeJeu {
 
         boolean quelquUnAMontre = false;
         for (Joueur autre : partie.getJoueurs()) {
-            if (!autre.getPersonnage().equals(joueur.getPersonnage())){
-                Carte montree = carteDansInventaire(autre, new Carte[]{carteSuspect, carteArme, carteLieu});
+            if (!autre.getPersonnage().equals(joueur.getPersonnage())) {
+                Carte montree = carteDansInventaire(autre, new Carte[] { carteSuspect, carteArme, carteLieu });
                 if (montree != null) {
                     rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
                     dire(autre.getPersonnage() + " te montre une carte : " + montree
                             + " (cochee dans ton carnet).");
                     quelquUnAMontre = true;
                     break;
-                    }
+                }
             } else {
                 continue;
             }
-            }
-        
+        }
 
         if (!quelquUnAMontre) {
             dire("Personne ne peut montrer de carte... tres interessant !");
         }
     }
 
-    /** Retourne la premiere carte de l'inventaire qui correspond a l'hypothese ou null. */
+    /**
+     * Retourne la premiere carte de l'inventaire qui correspond a l'hypothese ou
+     * null.
+     */
     private Carte carteDansInventaire(Joueur joueur, Carte[] recherchees) {
         for (Carte carte : joueur.getCardInventory()) {
             for (Carte recherchee : recherchees) {
@@ -541,7 +553,8 @@ public class BoucleDeJeu {
         if (correcte) {
             partie.terminer("Bravo " + joueur.getPersonnage() + ", tu as resolu l'enquete !\n" + solutionEnTexte());
         } else {
-            partie.terminer("Rate, " + joueur.getPersonnage() + "... Tu es elimine !\nLa solution etait :\n" + solutionEnTexte());
+            partie.terminer("Rate, " + joueur.getPersonnage() + "... Tu es elimine !\nLa solution etait :\n"
+                    + solutionEnTexte());
         }
     }
 
@@ -624,15 +637,15 @@ public class BoucleDeJeu {
                 + " lance le de (" + valeur + ") et s'arrete " + arrivee + ".");
     }
 
-    private void faireHypotheseBot(Bot joueur){
+    private void faireHypotheseBot(Bot joueur) {
         String salle = partie.salleDuJoueur(joueur);
 
-        System.out.println("Hypothese dans la salle : " + salle + " par "+joueur.getPersonnage());
+        System.out.println("Hypothese dans la salle : " + salle + " par " + joueur.getPersonnage());
         Suspects suspect = Suspects.values()[1 + hasard.nextInt(6)];
         Armes arme = Armes.values()[1 + hasard.nextInt(6)];
         Lieux lieu = partie.lieuPourSalle(salle);
 
-        dire(joueur.getPersonnage()+" proposes : " + suspect + " avec " + arme + " dans " + lieu + ".");
+        dire(joueur.getPersonnage() + " proposes : " + suspect + " avec " + arme + " dans " + lieu + ".");
 
         CarteSuspect carteSuspect = new CarteSuspect(suspect);
         CarteArme carteArme = new CarteArme(arme);
@@ -640,8 +653,8 @@ public class BoucleDeJeu {
 
         boolean quelquUnAMontre = false;
         for (Joueur autre : partie.getJoueurs()) {
-            if (!autre.getPersonnage().equals(joueur.getPersonnage())){
-                Carte montree = carteDansInventaire(autre, new Carte[]{carteSuspect, carteArme, carteLieu});
+            if (!autre.getPersonnage().equals(joueur.getPersonnage())) {
+                Carte montree = carteDansInventaire(autre, new Carte[] { carteSuspect, carteArme, carteLieu });
                 if (montree != null) {
                     rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
                     quelquUnAMontre = true;
@@ -653,10 +666,11 @@ public class BoucleDeJeu {
         }
     }
 
-
-    /** Essaie quelques directions au hasard ; retourne false si le bot est coince. */
+    /**
+     * Essaie quelques directions au hasard ; retourne false si le bot est coince.
+     */
     private boolean deplacerBotAuHasard(Bot bot) {
-        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
         for (int essai = 0; essai < 10; essai++) {
             int[] direction = directions[hasard.nextInt(directions.length)];
             boolean deplace = partie.deplacer(bot, direction[0], direction[1]);
@@ -690,7 +704,8 @@ public class BoucleDeJeu {
         // Les messages depuis le dernier rafraichissement, puis on repart a zero
         for (String message : messages) {
             System.out.println(message);
-        }     etat = Etat.MENU;
+        }
+        etat = Etat.MENU;
         messages.clear();
     }
 

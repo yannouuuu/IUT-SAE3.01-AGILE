@@ -29,6 +29,22 @@ public class Saisie {
         return terminee;
     }
 
+    public String LireLaDirection(String terminal) {
+        return normaliserDirection(lireLigne(terminal));
+    }
+
+    public static String normaliserDirection(String ligne) {
+        if (ligne.endsWith("[A"))
+            return "Z";
+        if (ligne.endsWith("[B"))
+            return "s";
+        if (ligne.endsWith("[D"))
+            return "q";
+        if (ligne.endsWith("[C"))
+            return "d";
+        return ligne;
+    }
+
     /** Redemande tant que l'utilisateur ne tape pas un nombre entre min et max. */
     public int lireNumero(String invite, int min, int max) {
         while (!terminee) {
