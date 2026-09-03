@@ -7,6 +7,7 @@ public class Commandes {
         DE,
         CARNET,
         MAP,
+        CARTES,
         PARLER,
         HYPOTHESE,
         ACCUSER,
@@ -16,7 +17,11 @@ public class Commandes {
         QUITTER,
         AUTRE,
         CHEAT_MOUVEMENT,
+<<<<<<< HEAD
         SAVE
+=======
+        CHEAT_SOLUTION
+>>>>>>> e224caf2b820859848452ea99dce29a95ef513a8
     }
 
     public static Type interpreter(String saisie) {
@@ -29,6 +34,9 @@ public class Commandes {
         }
         if (texte.equals("/map")) {
             return Type.MAP;
+        }
+        if (texte.equals("/cartes")) {
+            return Type.CARTES;
         }
         if (texte.equals("/parler")) {
             return Type.PARLER;
@@ -54,8 +62,13 @@ public class Commandes {
         if (texte.equals("/cheat_mouvement")){
             return Type.CHEAT_MOUVEMENT;
         }
+<<<<<<< HEAD
         if (texte.equals("/save")){
             return Type.SAVE;
+=======
+        if (texte.equals("/cheat_solution")){
+            return Type.CHEAT_SOLUTION;
+>>>>>>> e224caf2b820859848452ea99dce29a95ef513a8
         }
         return Type.AUTRE;
     }

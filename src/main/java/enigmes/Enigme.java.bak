@@ -1,6 +1,10 @@
+<<<<<<< HEAD:src/main/java/enigmes/EnigmeBackUp.java
 package enigmes;
 
 import java.util.ArrayList;
+=======
+/* import java.util.ArrayList;
+>>>>>>> e224caf2b820859848452ea99dce29a95ef513a8:src/main/java/enigmes/Enigme.java.bak
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -65,3 +69,5 @@ public class EnigmeBackUp {
     }
 
 }
+
+*/ 

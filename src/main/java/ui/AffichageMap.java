@@ -13,7 +13,6 @@ public class AffichageMap {
 
     private static final int CELL_W = 24;
     private static final int CELL_H = 6;
-    private static final int DOOR_W = 5;
     private static final int ROWS = 5;
     private static final int COLS = 5;
 
@@ -191,28 +190,29 @@ public class AffichageMap {
             }
         }
 
-        // Portes (trous avec marqueurs =)
+        // Portes : une seule case '=', alignee sur l'unique point d'entree reel (pointDevantPorte)
         for (String[] door : DOORS) {
             int[] pos = positionPiece(door[0]);
             int r = pos[0], c = pos[1];
             int top = r * (CELL_H + 1);
             int left = c * (CELL_W + 1);
+            int[] point = pointDevantPorte(door[0], door[1]);
             switch (door[1]) {
                 case "N" -> {
-                    int start = left + 1 + (CELL_W - DOOR_W) / 2;
-                    for (int x = start; x < start + DOOR_W; x++) grid[top][x] = '=';
+                    int colOffset = point[1] % POINTS_PAR_CASE_COLONNE;
+                    grid[top][left + 2 + colOffset * 3] = '=';
                 }
                 case "S" -> {
-                    int start = left + 1 + (CELL_W - DOOR_W) / 2;
-                    for (int x = start; x < start + DOOR_W; x++) grid[top + CELL_H + 1][x] = '=';
+                    int colOffset = point[1] % POINTS_PAR_CASE_COLONNE;
+                    grid[top + CELL_H + 1][left + 2 + colOffset * 3] = '=';
                 }
                 case "W" -> {
-                    int start = top + 1 + (CELL_H - DOOR_W) / 2;
-                    for (int y = start; y < start + DOOR_W; y++) grid[y][left] = '=';
+                    int rowOffset = point[0] % POINTS_PAR_CASE_LIGNE;
+                    grid[top + 2 + rowOffset * 2][left] = '=';
                 }
                 case "E" -> {
-                    int start = top + 1 + (CELL_H - DOOR_W) / 2;
-                    for (int y = start; y < start + DOOR_W; y++) grid[y][left + CELL_W + 1] = '=';
+                    int rowOffset = point[0] % POINTS_PAR_CASE_LIGNE;
+                    grid[top + 2 + rowOffset * 2][left + CELL_W + 1] = '=';
                 }
             }
         }

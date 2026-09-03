@@ -1,5 +1,10 @@
 package moteur;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
+
 import interaction.Commandes;
 import interaction.Pnj;
 import interaction.Saisie;
@@ -17,6 +22,7 @@ import ui.Marqueur;
 import ui.Menu;
 import ui.Rendu;
 
+<<<<<<< HEAD
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +31,8 @@ import java.util.Scanner;
 
 import Historique.Sauvegarde;
 
+=======
+>>>>>>> e224caf2b820859848452ea99dce29a95ef513a8
 /** Machine a etats du jeu : Menu -> Partie -> Fin. */
 public class BoucleDeJeu {
 
@@ -85,6 +93,7 @@ public class BoucleDeJeu {
     private void dire(String message) {
         messages.add(message);
     }
+<<<<<<< HEAD
     
     private void faireLOAD(){
         effacerEcran();
@@ -100,8 +109,10 @@ public class BoucleDeJeu {
       
     }
     // ------------------------------------------------------------------
+=======
+
+>>>>>>> e224caf2b820859848452ea99dce29a95ef513a8
     // Etat MENU
-    // ------------------------------------------------------------------
 
     private void faireMenu() {
         effacerEcran();
@@ -127,7 +138,6 @@ public class BoucleDeJeu {
         ItnitialiserPartie init = new ItnitialiserPartie();
 
         Object[] resultat = init.systemeDistribution();
-        @SuppressWarnings("unchecked")
         List<List<Carte>> inventaires = (List<List<Carte>>) resultat[0];
         Carte[] cartesCachees = (Carte[]) resultat[1];
 
@@ -140,6 +150,9 @@ public class BoucleDeJeu {
             joueurs[i].setPosition(DEPARTS[i][0], DEPARTS[i][1]);
         }
 
+        // Nouvelle partie : on efface les coches/possessions de la partie precedente
+        rendu.getPanneau().getCarnet().reinitialiser();
+
         // Les cartes du joueur sont hors de cause : on les coche d'office dans le carnet
         cocherCartesDansLeCarnet(joueurs[0]);
 
@@ -147,6 +160,9 @@ public class BoucleDeJeu {
         dire("Bienvenue ! Tu joues " + personnage + " " + personnage.pastille() + ".");
         dire("Tes " + joueurs[0].getCardInventory().length
                 + " cartes de depart sont deja cochees dans ton carnet (/carnet pour les voir).");
+
+        // Avant meme d'afficher la map pour la premiere fois on montre ses cartes de depart au joueur
+        afficherCartesJoueursTemporairement(joueurs[0]);
     }
 
     private void cocherCartesDansLeCarnet(Joueur joueur) {
@@ -158,20 +174,38 @@ public class BoucleDeJeu {
     /** Transforme une carte en nom du carnet : SALLE_DE_BAL -> "salle de bal". */
     private String nomPourCarnet(Carte carte) {
         String nomEnum = "";
-        if (carte instanceof CarteSuspect) {
-            nomEnum = ((CarteSuspect) carte).getSuspect().name();
-        } else if (carte instanceof CarteArme) {
-            nomEnum = ((CarteArme) carte).getArme().name();
-        } else if (carte instanceof CarteLieu) {
-            nomEnum = ((CarteLieu) carte).getLieu().name();
+        if (carte instanceof CarteSuspect carteSuspect) {
+            nomEnum = carteSuspect.getSuspect().name();
+        } else if (carte instanceof CarteArme carteArme) {
+            nomEnum = carteArme.getArme().name();
+        } else if (carte instanceof CarteLieu carteLieu) {
+            nomEnum = carteLieu.getLieu().name();
         }
         return nomEnum.replace('_', ' ');
     }
 
-    // ------------------------------------------------------------------
-    // Etat PARTIE : un appel = le tour d'un joueur
-    // ------------------------------------------------------------------
+    /** Les cles des cartes du joueur ("SUSPECT:MOUTARDE", ...), pour retrouver leur dessin dans AffichageCartes. */
+    private List<String> clesCartes(Joueur joueur) {
+        List<String> cles = new ArrayList<>();
+        for (Carte carte : joueur.getCardInventory()) {
+            cles.add(cleCarte(carte));
+        }
+        return cles;
+    }
 
+    private String cleCarte(Carte carte) {
+        if (carte instanceof CarteSuspect carteSuspect) {
+            return "SUSPECT:" + carteSuspect.getSuspect().name();
+        } else if (carte instanceof CarteArme carteArme) {
+            return "ARME:" + carteArme.getArme().name();
+        } else if (carte instanceof CarteLieu carteLieu) {
+            return "LIEU:" + carteLieu.getLieu().name();
+        }
+        return "";
+    }
+
+    // Etat PARTIE : un appel = le tour d'un joueur
+    
     private void faireUnTour() {
         Joueur courant = tours.joueurCourant();
         Joueur[] s = tours.getJoueurs();
@@ -193,14 +227,14 @@ public class BoucleDeJeu {
         }
     }
 
-    // ------------------------------------------------------------------
     // Tour du joueur humain
-    // ------------------------------------------------------------------
 
     private void jouerTourJoueur(Joueur joueur,Joueur bot1,Joueur bot2,Joueur bot3) {
         boolean tourFini = false;
         boolean deDejaLance = false;
-
+        if (joueur.peutAccuser()){
+            faireAccusationBot(joueur, joueur.quiAccuser());
+        }
         while (!tourFini && !partie.estTerminee()) {
             afficherEcran();
             System.out.println("--- A toi de jouer, " + joueur.getPersonnage() + " "
@@ -219,6 +253,9 @@ public class BoucleDeJeu {
                 rendu.getPanneau().ouvrirCarnet();
             } else if (commande == Commandes.Type.MAP) {
                 rendu.getPanneau().revenirMap();
+                rendu.revenirMap();
+            } else if (commande == Commandes.Type.CARTES) {
+                afficherCartesJoueursTemporairement(joueur);
             } else if (commande == Commandes.Type.PARLER) {
                 parlerAuPnj(joueur);
             } else if (commande == Commandes.Type.HYPOTHESE) {
@@ -255,10 +292,23 @@ public class BoucleDeJeu {
         return rendu.getPanneau().aide();
     }
 
+    // Affiche les cartes du joueur humain pendant 5 secondes, puis revient a la map
+    private void afficherCartesJoueursTemporairement(Joueur joueur) {
+        rendu.ouvrirCartes(joueur.getPersonnage().toString(), clesCartes(joueur));
+        afficherEcran();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            // rien
+        }
+        rendu.revenirMap();
+    }
+
     private void direAide() {
         dire("Commandes disponibles :");
         dire("  /de        lancer le de puis se deplacer (z haut, s bas, q gauche, d droite)");
         dire("  /carnet    ouvrir le carnet (Espace = cocher, z/s = naviguer)");
+        dire("  /cartes    voir tes cartes");
         dire("  /map       revenir sur la map");
         dire("  /parler    discuter avec le PNJ present dans ta salle");
         dire("  /hypothese faire une hypothese dans la salle ou tu es");
@@ -269,9 +319,7 @@ public class BoucleDeJeu {
         dire("  q          quitter la partie");
     }
 
-    // ------------------------------------------------------------------
     // De et deplacement
-    // ------------------------------------------------------------------
 
     private void lancerDeEtDeplacer(Joueur joueur) {
         int valeur = rendu.getPanneau().lancerDe();
@@ -418,9 +466,7 @@ public class BoucleDeJeu {
         arriveeDansSalle(joueur, destination);
     }
 
-    // ------------------------------------------------------------------
     // PNJ et enigmes
-    // ------------------------------------------------------------------
 
     private void parlerAuPnj(Joueur joueur) {
         String salle = partie.salleDuJoueur(joueur);
@@ -432,9 +478,7 @@ public class BoucleDeJeu {
         dire(pnj.dialogue());
     }
 
-    // ------------------------------------------------------------------
     // Hypothese : les autres joueurs montrent une carte s'ils en ont une
-    // ------------------------------------------------------------------
 
     private void faireHypothese(Joueur joueur) {
         String salle = partie.salleDuJoueur(joueur);
@@ -456,26 +500,39 @@ public class BoucleDeJeu {
 
         boolean quelquUnAMontre = false;
         for (Joueur autre : partie.getJoueurs()) {
-            if (autre == joueur) {
+            if (!autre.getPersonnage().equals(joueur.getPersonnage())){
+                Carte montree = carteDansInventaire(autre, new Carte[]{carteSuspect, carteArme, carteLieu});
+                if (montree != null) {
+                    rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
+                    dire(autre.getPersonnage() + " te montre une carte : " + montree
+                            + " (cochee dans ton carnet).");
+                    quelquUnAMontre = true;
+                    break;
+                    }
+            } else {
                 continue;
             }
+<<<<<<< HEAD
             Carte montree = carteDansInventaire(autre, carteSuspect, carteArme, carteLieu);
             if (montree != null) {
                 rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
+                joueur.ajouterCoche(carteLieu);
                 dire(autre.getPersonnage() + " te montre une carte : " + montree
                         + " (cochee dans ton carnet).");
                 quelquUnAMontre = true;
                 break;
+=======
+>>>>>>> d0e63e4 (fix: cartes non refresh apres q pour quitter)
             }
-        }
+        
 
         if (!quelquUnAMontre) {
             dire("Personne ne peut montrer de carte... tres interessant !");
         }
     }
 
-    /** Retourne la premiere carte de l'inventaire qui correspond a l'hypothese, ou null. */
-    private Carte carteDansInventaire(Joueur joueur, Carte... recherchees) {
+    /** Retourne la premiere carte de l'inventaire qui correspond a l'hypothese ou null. */
+    private Carte carteDansInventaire(Joueur joueur, Carte[] recherchees) {
         for (Carte carte : joueur.getCardInventory()) {
             for (Carte recherchee : recherchees) {
                 if (carte.equals(recherchee)) {
@@ -486,9 +543,7 @@ public class BoucleDeJeu {
         return null;
     }TourBot
 
-    // ------------------------------------------------------------------
     // Accusation finale
-    // ------------------------------------------------------------------
 
     private void faireAccusation(Joueur joueur) {
         System.out.println("ACCUSATION FINALE ! Bonne reponse = victoire, mauvaise = defaite.");
@@ -532,9 +587,7 @@ public class BoucleDeJeu {
         return sb.toString();
     }
 
-    // ------------------------------------------------------------------
     // Choix numerotes
-    // ------------------------------------------------------------------
 
     private Suspects choisirSuspect() {
         System.out.println("Quel suspect ?");
@@ -565,9 +618,7 @@ public class BoucleDeJeu {
         return partie.lieuPourSalle(SALLES[numero - 1]);
     }
 
-    // ------------------------------------------------------------------
     // Tour d'un bot : il lance le de et se deplace au hasard
-    // ------------------------------------------------------------------
 
     private void jouerTourBot(Bot bot) {
         int valeur = rendu.getPanneau().lancerDe();
@@ -592,10 +643,61 @@ public class BoucleDeJeu {
             arrivee = "dans le couloir";
         } else {
             arrivee = "dans la salle : " + salle;
+            faireHypotheseBot(bot);
         }
         dire(bot.getPersonnage().pastille() + " " + bot.getPersonnage()
                 + " lance le de (" + valeur + ") et s'arrete " + arrivee + ".");
     }
+    
+    private void faireAccusationBot(Joueur joueur, Object[] reponse){
+        System.out.println(joueur.getPersonnage() + " FAIT UNE ACCUSATION FINALE ! Bonne reponse = victoire, mauvaise = defaite.");
+        Suspects suspect = (Suspects) reponse[0];
+        Armes arme = (Armes) reponse[1];
+        Lieux lieu = (Lieux) reponse[2];
+        System.out.println("Il accuses : " + suspect + " avec " + arme + " dans " + lieu + ".");
+
+        boolean correcte = solutionContient(new CarteSuspect(suspect))
+                && solutionContient(new CarteArme(arme))
+                && solutionContient(new CarteLieu(lieu));
+
+        if (correcte) {
+            partie.terminer("Bravo " + joueur.getPersonnage() + ", tu as resolu l'enquete !\n" + solutionEnTexte());
+        } else {
+            partie.terminer("Rate, " + joueur.getPersonnage() + "... Tu es elimine !\nLa solution etait :\n" + solutionEnTexte());
+        
+    }
+
+    }
+
+    private void faireHypotheseBot(Bot joueur){
+        String salle = partie.salleDuJoueur(joueur);
+
+        System.out.println("Hypothese dans la salle : " + salle + " par "+joueur.getPersonnage());
+        Suspects suspect = Suspects.values()[1 + hasard.nextInt(6)];
+        Armes arme = Armes.values()[1 + hasard.nextInt(6)];
+        Lieux lieu = partie.lieuPourSalle(salle);
+
+        dire(joueur.getPersonnage()+" proposes : " + suspect + " avec " + arme + " dans " + lieu + ".");
+
+        CarteSuspect carteSuspect = new CarteSuspect(suspect);
+        CarteArme carteArme = new CarteArme(arme);
+        CarteLieu carteLieu = new CarteLieu(lieu);
+
+        boolean quelquUnAMontre = false;
+        for (Joueur autre : partie.getJoueurs()) {
+            if (!autre.getPersonnage().equals(joueur.getPersonnage())){
+                Carte montree = carteDansInventaire(autre, new Carte[]{carteSuspect, carteArme, carteLieu});
+                if (montree != null) {
+                    rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
+                    quelquUnAMontre = true;
+                    break;
+                }
+            } else {
+                continue;
+            }
+        }
+    }
+
 
     /** Essaie quelques directions au hasard ; retourne false si le bot est coince. */
     private boolean deplacerBotAuHasard(Bot bot) {
@@ -610,9 +712,7 @@ public class BoucleDeJeu {
         return false;
     }
 
-    // ------------------------------------------------------------------
     // Affichage : on efface le terminal puis on redessine tout l'ecran
-    // ------------------------------------------------------------------
 
     private void afficherEcran() {
         effacerEcran();
@@ -645,7 +745,6 @@ public class BoucleDeJeu {
      */
     private void effacerEcran() {
         System.out.print("\u001B[H\u001B[2J");
-        System.out.flush();
     }
 
     /** Une ligne qui rappelle quelle pastille correspond a quel personnage. */
@@ -662,9 +761,7 @@ public class BoucleDeJeu {
         return sb.toString();
     }
 
-    // ------------------------------------------------------------------
     // Etat FIN
-    // ------------------------------------------------------------------
 
     private void faireFin() {
         effacerEcran();
