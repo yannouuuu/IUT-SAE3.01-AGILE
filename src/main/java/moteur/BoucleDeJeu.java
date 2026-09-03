@@ -408,29 +408,19 @@ public class BoucleDeJeu {
         boolean quelquUnAMontre = false;
         for (Joueur autre : partie.getJoueurs()) {
             if (!autre.getPersonnage().equals(joueur.getPersonnage())){
-                Carte montree = carteDansInventaire(autre, carteSuspect, carteArme, carteLieu);
+                Carte montree = carteDansInventaire(autre, new Carte[]{carteSuspect, carteArme, carteLieu});
                 if (montree != null) {
                     rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
                     dire(autre.getPersonnage() + " te montre une carte : " + montree
                             + " (cochee dans ton carnet).");
                     quelquUnAMontre = true;
                     break;
-                }
+                    }
             } else {
                 continue;
             }
-<<<<<<< HEAD
-=======
-            Carte montree = carteDansInventaire(autre, new Carte[]{carteSuspect, carteArme, carteLieu});
-            if (montree != null) {
-                rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
-                dire(autre.getPersonnage() + " te montre une carte : " + montree
-                        + " (cochee dans ton carnet).");
-                quelquUnAMontre = true;
-                break;
             }
->>>>>>> 7503568 (feat: add EnigmeBackUp class and refactor BoucleDeJeu for improved game logic)
-        }
+        
 
         if (!quelquUnAMontre) {
             dire("Personne ne peut montrer de carte... tres interessant !");
