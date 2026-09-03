@@ -232,13 +232,11 @@ public class BoucleDeJeu {
     private void jouerTourJoueur(Joueur joueur,Joueur bot1,Joueur bot2,Joueur bot3) {
         boolean tourFini = false;
         boolean deDejaLance = false;
-        if (joueur.peutAccuser()){
-            faireAccusationBot(joueur, joueur.quiAccuser());
-        }
+
         while (!tourFini && !partie.estTerminee()) {
             afficherEcran();
             System.out.println("--- A toi de jouer, " + joueur.getPersonnage() + " "
-                    + joueur.getPersonnage().pastille() + " ! (/aide pour les commandes) ---");
+                    + joueur.getPersonnage().pastille() + " ! ---");
             String texte = saisie.lireLigne(invite());
             Commandes.Type commande = Commandes.interpreter(texte);
 
@@ -282,7 +280,7 @@ public class BoucleDeJeu {
             } else {
                 boolean consommee = rendu.getPanneau().traiter(texte);
                 if (!consommee) {
-                    dire("Commande inconnue. Tape /aide pour voir la liste.");
+                    dire("Commande inconnue. La liste est affichee a droite.");
                 }
             }
         }
@@ -512,17 +510,6 @@ public class BoucleDeJeu {
             } else {
                 continue;
             }
-<<<<<<< HEAD
-            Carte montree = carteDansInventaire(autre, carteSuspect, carteArme, carteLieu);
-            if (montree != null) {
-                rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
-                joueur.ajouterCoche(carteLieu);
-                dire(autre.getPersonnage() + " te montre une carte : " + montree
-                        + " (cochee dans ton carnet).");
-                quelquUnAMontre = true;
-                break;
-=======
->>>>>>> d0e63e4 (fix: cartes non refresh apres q pour quitter)
             }
         
 
@@ -647,26 +634,6 @@ public class BoucleDeJeu {
         }
         dire(bot.getPersonnage().pastille() + " " + bot.getPersonnage()
                 + " lance le de (" + valeur + ") et s'arrete " + arrivee + ".");
-    }
-    
-    private void faireAccusationBot(Joueur joueur, Object[] reponse){
-        System.out.println(joueur.getPersonnage() + " FAIT UNE ACCUSATION FINALE ! Bonne reponse = victoire, mauvaise = defaite.");
-        Suspects suspect = (Suspects) reponse[0];
-        Armes arme = (Armes) reponse[1];
-        Lieux lieu = (Lieux) reponse[2];
-        System.out.println("Il accuses : " + suspect + " avec " + arme + " dans " + lieu + ".");
-
-        boolean correcte = solutionContient(new CarteSuspect(suspect))
-                && solutionContient(new CarteArme(arme))
-                && solutionContient(new CarteLieu(lieu));
-
-        if (correcte) {
-            partie.terminer("Bravo " + joueur.getPersonnage() + ", tu as resolu l'enquete !\n" + solutionEnTexte());
-        } else {
-            partie.terminer("Rate, " + joueur.getPersonnage() + "... Tu es elimine !\nLa solution etait :\n" + solutionEnTexte());
-        
-    }
-
     }
 
     private void faireHypotheseBot(Bot joueur){

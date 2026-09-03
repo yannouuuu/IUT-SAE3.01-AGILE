@@ -3,6 +3,7 @@ package ui;
 import carnet.Carnet;
 import deplacement.De;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /** Panneau de droite : le carnet, ou la face du de pendant le deplacement. */
@@ -42,16 +43,21 @@ public class PanneauDroit {
     }
 
     public List<String> lignes() {
+        List<String> lignes = new ArrayList<>();
         if (valeurDe > 0) {
-            return AffichageDe.rendu(valeurDe);
+            lignes.addAll(AffichageDe.rendu(valeurDe));
+        } else {
+            lignes.addAll(AffichageCarnet.rendu(carnet));
         }
-        return AffichageCarnet.rendu(carnet);
+        lignes.add("");
+        lignes.addAll(AffichageAide.lignes());
+        return lignes;
     }
 
     public String aide() {
         if (carnet.estOuvert()) {
             return "+ Saisie (Espace = cocher, z/s = naviguer, /map = revenir) > ";
         }
-        return "+ Saisie (/de, /carnet, /fin, /aide, q = quitter) > ";
+        return "+ Saisie (/de, /carnet, /fin, q = quitter) > ";
     }
 }
