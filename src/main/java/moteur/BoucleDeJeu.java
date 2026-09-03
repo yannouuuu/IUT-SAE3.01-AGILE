@@ -420,17 +420,17 @@ public class BoucleDeJeu {
 
         boolean quelquUnAMontre = false;
         for (Joueur autre : partie.getJoueurs()) {
-            if (autre.getPersonnage().equals(suspect)){
-                Carte montree = carteDansInventaire(autre, carteSuspect, carteArme, carteLieu);
-                if (montree != null) {
-                    rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
-                    dire(autre.getPersonnage() + " te montre une carte : " + montree
-                            + " (cochee dans ton carnet).");
-                    quelquUnAMontre = true;
-                    break;
-                }
-            } else {
+            // On ne demande jamais au joueur qui vient de faire l'hypothese
+            if (autre == joueur) {
                 continue;
+            }
+            Carte montree = carteDansInventaire(autre, carteSuspect, carteArme, carteLieu);
+            if (montree != null) {
+                rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
+                dire(autre.getPersonnage() + " te montre une carte : " + montree
+                        + " (cochee dans ton carnet).");
+                quelquUnAMontre = true;
+                break;
             }
         }
 
@@ -579,15 +579,15 @@ public class BoucleDeJeu {
 
         boolean quelquUnAMontre = false;
         for (Joueur autre : partie.getJoueurs()) {
-            if (autre.getPersonnage().equals(suspect)){
-                Carte montree = carteDansInventaire(autre, carteSuspect, carteArme, carteLieu);
-                if (montree != null) {
-                    rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
-                    quelquUnAMontre = true;
-                    break;
-                }
-            } else {
+            // On ne demande jamais au joueur (bot) qui vient de faire l'hypothese
+            if (autre == joueur) {
                 continue;
+            }
+            Carte montree = carteDansInventaire(autre, carteSuspect, carteArme, carteLieu);
+            if (montree != null) {
+                rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
+                quelquUnAMontre = true;
+                break;
             }
         }
     }
