@@ -407,20 +407,19 @@ public class BoucleDeJeu {
 
         boolean quelquUnAMontre = false;
         for (Joueur autre : partie.getJoueurs()) {
-            if (!autre.getPersonnage().equals(joueur.getPersonnage())){
-                Carte montree = carteDansInventaire(autre, new Carte[]{carteSuspect, carteArme, carteLieu});
-                if (montree != null) {
-                    rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
-                    dire(autre.getPersonnage() + " te montre une carte : " + montree
-                            + " (cochee dans ton carnet).");
-                    quelquUnAMontre = true;
-                    break;
-                    }
-            } else {
+            // On ne demande jamais au joueur qui vient de faire l'hypothese
+            if (autre == joueur) {
                 continue;
             }
+            Carte montree = carteDansInventaire(autre, carteSuspect, carteArme, carteLieu);
+            if (montree != null) {
+                rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
+                dire(autre.getPersonnage() + " te montre une carte : " + montree
+                        + " (cochee dans ton carnet).");
+                quelquUnAMontre = true;
+                break;
             }
-        
+        }
 
         if (!quelquUnAMontre) {
             dire("Personne ne peut montrer de carte... tres interessant !");
@@ -428,7 +427,7 @@ public class BoucleDeJeu {
     }
 
     /** Retourne la premiere carte de l'inventaire qui correspond a l'hypothese ou null. */
-    private Carte carteDansInventaire(Joueur joueur, Carte[] recherchees) {
+    private Carte carteDansInventaire(Joueur joueur, Carte... recherchees) {
         for (Carte carte : joueur.getCardInventory()) {
             for (Carte recherchee : recherchees) {
                 if (carte.equals(recherchee)) {
@@ -549,8 +548,8 @@ public class BoucleDeJeu {
         String salle = partie.salleDuJoueur(joueur);
 
         System.out.println("Hypothese dans la salle : " + salle + " par "+joueur.getPersonnage());
-        Suspects suspect = Suspects.values()[1 + hasard.nextInt(6)];
-        Armes arme = Armes.values()[1 + hasard.nextInt(6)];
+        Suspects suspect = Suspects.values()[1+hasard.nextInt(5)];
+        Armes arme = Armes.values()[1 + hasard.nextInt(5)];
         Lieux lieu = partie.lieuPourSalle(salle);
 
         dire(joueur.getPersonnage()+" proposes : " + suspect + " avec " + arme + " dans " + lieu + ".");
@@ -559,17 +558,17 @@ public class BoucleDeJeu {
         CarteArme carteArme = new CarteArme(arme);
         CarteLieu carteLieu = new CarteLieu(lieu);
 
-        boolean quelquUnAMontre = false;
+        boolean quelquUnAMontre = false;    
         for (Joueur autre : partie.getJoueurs()) {
-            if (!autre.getPersonnage().equals(joueur.getPersonnage())){
-                Carte montree = carteDansInventaire(autre, new Carte[]{carteSuspect, carteArme, carteLieu});
-                if (montree != null) {
-                    rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
-                    quelquUnAMontre = true;
-                    break;
-                }
-            } else {
+            // On ne demande jamais au joueur (bot) qui vient de faire l'hypothese
+            if (autre == joueur) {
                 continue;
+            }
+            Carte montree = carteDansInventaire(autre, carteSuspect, carteArme, carteLieu);
+            if (montree != null) {
+                rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
+                quelquUnAMontre = true;
+                break;
             }
         }
     }
