@@ -14,7 +14,8 @@ public class Commandes {
         FIN_TOUR,
         AIDE,
         QUITTER,
-        AUTRE
+        AUTRE,
+        CHEAT_MOUVEMENT
     }
 
     public static Type interpreter(String saisie) {
@@ -48,6 +49,9 @@ public class Commandes {
         }
         if (texte.equals("q")) {
             return Type.QUITTER;
+        }
+        if (texte.equals("/cheat_mouvement")){
+            return Type.CHEAT_MOUVEMENT;
         }
         return Type.AUTRE;
     }

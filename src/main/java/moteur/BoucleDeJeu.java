@@ -205,7 +205,9 @@ public class BoucleDeJeu {
                 direAide();
             } else if (commande == Commandes.Type.QUITTER) {
                 partie.terminer("Partie abandonnee. La solution etait :\n" + solutionEnTexte());
-            } else {
+            } else if (commande == Commandes.Type.CHEAT_MOUVEMENT){
+                cheatMouvement(joueur);
+            }else {
                 boolean consommee = rendu.getPanneau().traiter(texte);
                 if (!consommee) {
                     dire("Commande inconnue. Tape /aide pour voir la liste.");
@@ -240,6 +242,53 @@ public class BoucleDeJeu {
         dire("Tu as fait " + valeur + " !");
 
         int pasRestants = valeur;
+        while (pasRestants > 0 && !partie.estTerminee()) {
+            afficherEcran();
+            String touche = saisie.lireLigne("Direction (" + pasRestants + " pas restants, z/q/s/d, x pour s'arreter) > ");
+
+            if (touche.equals("x") || saisie.estTerminee()) {
+                pasRestants = 0;
+                continue;
+            }
+
+            int dLigne = 0;
+            int dColonne = 0;
+            if (touche.equals("z")) {
+                dLigne = -1;
+            } else if (touche.equals("s")) {
+                dLigne = 1;
+            } else if (touche.equals("q")) {
+                dColonne = -1;
+            } else if (touche.equals("d")) {
+                dColonne = 1;
+            } else {
+                dire("Tape z, q, s, d pour bouger ou x pour t'arreter.");
+                continue;
+            }
+
+            boolean deplace = partie.deplacer(joueur, dLigne, dColonne);
+            if (!deplace) {
+                dire("Impossible d'aller par la : mur, bord du plateau, ou porte fermee a cle.");
+                continue;
+            }
+
+            pasRestants = pasRestants - 1;
+
+            String salle = partie.salleDuJoueur(joueur);
+            if (salle != null) {
+                // Entrer dans une salle termine le deplacement, comme au Cluedo
+                pasRestants = 0;
+                arriveeDansSalle(joueur, salle);
+            }
+        }
+
+        // Le deplacement est fini : le carnet remplace a nouveau le de
+        rendu.getPanneau().revenirMap();
+    }
+
+
+    private void cheatMouvement(Joueur joueur) {
+        int pasRestants = 999;
         while (pasRestants > 0 && !partie.estTerminee()) {
             afficherEcran();
             String touche = saisie.lireLigne("Direction (" + pasRestants + " pas restants, z/q/s/d, x pour s'arreter) > ");
