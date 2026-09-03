@@ -114,6 +114,9 @@ public class BoucleDeJeu {
             joueurs[i].setPosition(DEPARTS[i][0], DEPARTS[i][1]);
         }
 
+        // Nouvelle partie : on efface les coches/possessions de la partie precedente
+        rendu.getPanneau().getCarnet().reinitialiser();
+
         // Les cartes du joueur sont hors de cause : on les coche d'office dans le carnet
         cocherCartesDansLeCarnet(joueurs[0]);
 
@@ -122,7 +125,7 @@ public class BoucleDeJeu {
         dire("Tes " + joueurs[0].getCardInventory().length
                 + " cartes de depart sont deja cochees dans ton carnet (/carnet pour les voir).");
 
-        // Avant meme d'afficher la map pour la premiere fois, on montre ses cartes de depart au joueur
+        // Avant meme d'afficher la map pour la premiere fois on montre ses cartes de depart au joueur
         afficherCartesJoueursTemporairement(joueurs[0]);
     }
 
@@ -228,9 +231,6 @@ public class BoucleDeJeu {
                 partie.terminer("Partie abandonnee. La solution etait :\n" + solutionEnTexte());
             } else if (commande == Commandes.Type.CHEAT_MOUVEMENT){
                 cheatMouvement(joueur);
-            } else if (commande == Commandes.Type.CHEAT_SOLUTION){
-                dire("La solution est :");
-                dire(solutionEnTexte());
             }else {
                 boolean consommee = rendu.getPanneau().traiter(texte);
                 if (!consommee) {
@@ -303,7 +303,7 @@ public class BoucleDeJeu {
 
             boolean deplace = partie.deplacer(joueur, dLigne, dColonne);
             if (!deplace) {
-                dire(partie.raisonBlocage(joueur, dLigne, dColonne));
+                dire("Impossible d'aller par la : mur, bord du plateau, ou porte fermee a cle.");
                 continue;
             }
 
@@ -350,7 +350,7 @@ public class BoucleDeJeu {
 
             boolean deplace = partie.deplacer(joueur, dLigne, dColonne);
             if (!deplace) {
-                dire(partie.raisonBlocage(joueur, dLigne, dColonne));
+                dire("Impossible d'aller par la : mur, bord du plateau, ou porte fermee a cle.");
                 continue;
             }
 
@@ -451,10 +451,19 @@ public class BoucleDeJeu {
 
         boolean quelquUnAMontre = false;
         for (Joueur autre : partie.getJoueurs()) {
-            // On ne demande jamais au joueur qui vient de faire l'hypothese
-            if (autre == joueur) {
+            if (!autre.getPersonnage().equals(joueur.getPersonnage())){
+                Carte montree = carteDansInventaire(autre, new Carte[]{carteSuspect, carteArme, carteLieu});
+                if (montree != null) {
+                    rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
+                    dire(autre.getPersonnage() + " te montre une carte : " + montree
+                            + " (cochee dans ton carnet).");
+                    quelquUnAMontre = true;
+                    break;
+                    }
+            } else {
                 continue;
             }
+<<<<<<< HEAD
             Carte montree = carteDansInventaire(autre, carteSuspect, carteArme, carteLieu);
             if (montree != null) {
                 rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
@@ -463,8 +472,10 @@ public class BoucleDeJeu {
                         + " (cochee dans ton carnet).");
                 quelquUnAMontre = true;
                 break;
+=======
+>>>>>>> d0e63e4 (fix: cartes non refresh apres q pour quitter)
             }
-        }
+        
 
         if (!quelquUnAMontre) {
             dire("Personne ne peut montrer de carte... tres interessant !");
@@ -472,7 +483,7 @@ public class BoucleDeJeu {
     }
 
     /** Retourne la premiere carte de l'inventaire qui correspond a l'hypothese ou null. */
-    private Carte carteDansInventaire(Joueur joueur, Carte... recherchees) {
+    private Carte carteDansInventaire(Joueur joueur, Carte[] recherchees) {
         for (Carte carte : joueur.getCardInventory()) {
             for (Carte recherchee : recherchees) {
                 if (carte.equals(recherchee)) {
@@ -613,8 +624,8 @@ public class BoucleDeJeu {
         String salle = partie.salleDuJoueur(joueur);
 
         System.out.println("Hypothese dans la salle : " + salle + " par "+joueur.getPersonnage());
-        Suspects suspect = Suspects.values()[1+hasard.nextInt(5)];
-        Armes arme = Armes.values()[1 + hasard.nextInt(5)];
+        Suspects suspect = Suspects.values()[1 + hasard.nextInt(6)];
+        Armes arme = Armes.values()[1 + hasard.nextInt(6)];
         Lieux lieu = partie.lieuPourSalle(salle);
 
         dire(joueur.getPersonnage()+" proposes : " + suspect + " avec " + arme + " dans " + lieu + ".");
@@ -623,17 +634,17 @@ public class BoucleDeJeu {
         CarteArme carteArme = new CarteArme(arme);
         CarteLieu carteLieu = new CarteLieu(lieu);
 
-        boolean quelquUnAMontre = false;    
+        boolean quelquUnAMontre = false;
         for (Joueur autre : partie.getJoueurs()) {
-            // On ne demande jamais au joueur (bot) qui vient de faire l'hypothese
-            if (autre == joueur) {
+            if (!autre.getPersonnage().equals(joueur.getPersonnage())){
+                Carte montree = carteDansInventaire(autre, new Carte[]{carteSuspect, carteArme, carteLieu});
+                if (montree != null) {
+                    rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
+                    quelquUnAMontre = true;
+                    break;
+                }
+            } else {
                 continue;
-            }
-            Carte montree = carteDansInventaire(autre, carteSuspect, carteArme, carteLieu);
-            if (montree != null) {
-                rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
-                quelquUnAMontre = true;
-                break;
             }
         }
     }

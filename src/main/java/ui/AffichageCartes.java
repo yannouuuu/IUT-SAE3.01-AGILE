@@ -53,11 +53,17 @@ public class AffichageCartes {
 
         String espace = " ".repeat(ESPACE_ENTRE_CARTES);
         List<String> lignes = new ArrayList<>();
+        
         for (int y = 0; y < hauteur; y++) {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < dessins.size(); i++) {
                 List<String> dessin = dessins.get(i);
-                String morceau = y < dessin.size() ? dessin.get(y) : "";
+
+                String morceau = "";
+                if (y < dessin.size()) {
+                    morceau = dessin.get(y);
+                }
+
                 sb.append(GRIS).append(pad(morceau, CartesArt.largeur())).append(RESET);
                 if (i < dessins.size() - 1) {
                     sb.append(espace);

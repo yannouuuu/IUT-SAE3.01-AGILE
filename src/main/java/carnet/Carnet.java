@@ -38,6 +38,15 @@ public class Carnet {
     public void fermer()        { ouvert = false; }
     public boolean estOuvert()  { return ouvert; }
 
+    /** Efface toutes les coches et possessions d'une partie precedente, pour repartir a zero. */
+    public void reinitialiser() {
+        for (Entree entree : entrees) {
+            entree.reinitialiser();
+        }
+        selection = 1;
+        ouvert = false;
+    }
+
     // --- saisie interne (espace = cocher, z = monter, s = descendre) ---
 
     /** Retourne true si la saisie a ete consommee par le carnet. */
@@ -126,5 +135,6 @@ public class Carnet {
         public void toggleCoche()     { coche = !coche; }
         public void cocher()          { coche = true; }
         public void marquerPossedee() { possedee = true; }
+        public void reinitialiser()   { coche = false; possedee = false; }
     }
 }
