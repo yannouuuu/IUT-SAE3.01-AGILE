@@ -8,12 +8,7 @@ target/
 *.iws
 out/
 
-# Command Code
-.commandcode/
-
 # Système
 .DS_Store
 Thumbs.db
 
-# Logs
-*.log

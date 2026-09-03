@@ -1,5 +1,6 @@
 package ui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,6 +12,10 @@ public class Rendu {
     private final AffichageMap map = new AffichageMap();
     private final PanneauDroit panneau = new PanneauDroit();
 
+    private boolean surCartes = false;
+    private String personnageAffiche = "";
+    private List<String> clesCartesAffichees = new ArrayList<>();
+
     public PanneauDroit getPanneau() {
         return panneau;
     }
@@ -19,17 +24,39 @@ public class Rendu {
         return map;
     }
 
-    /** Affiche l'ecran complet : logo, map avec les personnages, panneau de droite. */
+    /** Remplace la map par les cartes du joueur, dans la zone principale. */
+    public void ouvrirCartes(String personnage, List<String> clesCartes) {
+        surCartes = true;
+        personnageAffiche = personnage;
+        clesCartesAffichees = clesCartes;
+    }
+
+    /** Revient sur la map, que les cartes soient affichees ou non. */
+    public void revenirMap() {
+        surCartes = false;
+    }
+
+    public boolean surCartes() {
+        return surCartes;
+    }
+
+    /** Affiche l'ecran complet : logo, map ou cartes avec les personnages, panneau de droite. */
     public void afficher(List<Marqueur> marqueurs) {
-        List<String> lignesMap = map.lignes(marqueurs);
+        List<String> lignesGauche;
+        if (surCartes) {
+            lignesGauche = AffichageCartes.rendu(personnageAffiche, clesCartesAffichees);
+        } else {
+            lignesGauche = map.lignes(marqueurs);
+        }
         List<String> lignesDroite = panneau.lignes();
-        int largeurMap = longueurVisible(lignesMap.get(0)) + 3;
+        int largeurGauche = largeurPanneau(lignesGauche) + 3;
 
         System.out.println();
-        System.out.println(Logo.rendu(largeurMap + largeurPanneau(lignesDroite)));
+        System.out.println(Logo.rendu(largeurGauche + largeurPanneau(lignesDroite)));
 
-        for (int i = 0; i < lignesMap.size(); i++) {
-            System.out.println(pad(lignesMap.get(i), largeurMap) + ligneDroite(lignesDroite, i));
+        int nbLignes = Math.max(lignesGauche.size(), lignesDroite.size());
+        for (int i = 0; i < nbLignes; i++) {
+            System.out.println(pad(ligneDroite(lignesGauche, i), largeurGauche) + ligneDroite(lignesDroite, i));
         }
 
         System.out.println();

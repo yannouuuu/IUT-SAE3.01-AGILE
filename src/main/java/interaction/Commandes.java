@@ -7,6 +7,7 @@ public class Commandes {
         DE,
         CARNET,
         MAP,
+        CARTES,
         PARLER,
         HYPOTHESE,
         ACCUSER,
@@ -15,7 +16,8 @@ public class Commandes {
         AIDE,
         QUITTER,
         AUTRE,
-        CHEAT_MOUVEMENT
+        CHEAT_MOUVEMENT,
+        CHEAT_SOLUTION
     }
 
     public static Type interpreter(String saisie) {
@@ -28,6 +30,9 @@ public class Commandes {
         }
         if (texte.equals("/map")) {
             return Type.MAP;
+        }
+        if (texte.equals("/cartes")) {
+            return Type.CARTES;
         }
         if (texte.equals("/parler")) {
             return Type.PARLER;
@@ -52,6 +57,9 @@ public class Commandes {
         }
         if (texte.equals("/cheat_mouvement")){
             return Type.CHEAT_MOUVEMENT;
+        }
+        if (texte.equals("/cheat_solution")){
+            return Type.CHEAT_SOLUTION;
         }
         return Type.AUTRE;
     }

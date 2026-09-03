@@ -62,6 +62,10 @@ public class EtatPartie {
         return Mouvement.deplacer(joueur, dLigne, dColonne, portes);
     }
 
+    public String raisonBlocage(Joueur joueur, int dLigne, int dColonne) {
+        return Mouvement.raisonBlocage(joueur, dLigne, dColonne, portes);
+    }
+
     /** Nom de la salle ou se trouve le joueur, ou null s'il est dans le couloir. */
     public String salleDuJoueur(Joueur joueur) {
         return AffichageMap.salleAuPoint(joueur.getX(), joueur.getY());
