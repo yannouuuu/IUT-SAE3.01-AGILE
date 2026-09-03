@@ -6,80 +6,124 @@ import carnet.Carnet.Entree;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Rendu ASCII du carnet. Lit l'etat depuis {@link Carnet}, n'en modifie rien. */
+/**
+ * Rendu du carnet, dans le meme style que la map.
+ *
+ * Le cadre est gris quand on est sur la map, jaune quand le carnet est actif.
+ * Les titres des categories sont en cyan et les coches en vert.
+ */
 public class AffichageCarnet {
 
     private static final String JAUNE = "\u001B[33m";
+    private static final String CYAN  = "\u001B[96m";
+    private static final String VERT  = "\u001B[92m";
+    private static final String GRIS  = "\u001B[90m";
     private static final String RESET = "\u001B[0m";
 
-    /** Produit les lignes encadrees du carnet. Bord jaune quand actif. */
+    private static final int MARGE = 2;
+
+    /** Produit les lignes encadrees du carnet. Lit l'etat depuis {@link Carnet}. */
     public static List<String> rendu(Carnet carnet) {
-        List<Entree> entrees   = carnet.getEntrees();
-        int          selection = carnet.getSelection();
-        boolean      actif     = carnet.estOuvert();
+        List<String> contenu = construireContenu(carnet);
+
+        int largeurContenu = 0;
+        for (String ligne : contenu) {
+            int longueur = longueurVisible(ligne);
+            if (longueur > largeurContenu) {
+                largeurContenu = longueur;
+            }
+        }
+        int largeurInterne = largeurContenu + MARGE * 2;
+
+        String couleurBord;
+        if (carnet.estOuvert()) {
+            couleurBord = JAUNE;
+        } else {
+            couleurBord = GRIS;
+        }
+
+        String traits = repeter('─', largeurInterne);
+        String marge = repeter(' ', MARGE);
+
+        List<String> lignes = new ArrayList<>();
+        lignes.add(couleurBord + "┌" + traits + "┐" + RESET);
+        lignes.add(couleurBord + "│" + RESET + centrer("CARNET", largeurInterne)
+                + couleurBord + "│" + RESET);
+        lignes.add(couleurBord + "├" + traits + "┤" + RESET);
+        for (String ligne : contenu) {
+            lignes.add(couleurBord + "│" + RESET + marge + pad(ligne, largeurContenu) + marge
+                    + couleurBord + "│" + RESET);
+        }
+        lignes.add(couleurBord + "└" + traits + "┘" + RESET);
+        return lignes;
+    }
+
+    /** Une ligne par entree : les titres en cyan, la selection en jaune, les coches en vert. */
+    private static List<String> construireContenu(Carnet carnet) {
+        List<Entree> entrees = carnet.getEntrees();
+        int selection = carnet.getSelection();
 
         List<String> contenu = new ArrayList<>();
         for (int i = 0; i < entrees.size(); i++) {
             Entree e = entrees.get(i);
 
-            String prefixe;
+            String prefixe = "  ";
             if (i == selection) {
-                prefixe = "> ";
-            } else {
-                prefixe = "  ";
+                prefixe = JAUNE + "> " + RESET;
             }
 
             if (e.estTitre()) {
-                contenu.add(prefixe + e.getNom() + " :");
+                contenu.add(prefixe + CYAN + e.getNom() + " :" + RESET);
             } else {
-                String coche;
-                if (e.estCoche()) {
-                    coche = "x";
-                } else {
-                    coche = " ";
+                String caseACocher = "[ ]";
+                if (e.estPossedee()) {
+                    caseACocher = "[" + JAUNE + "●" + RESET + "]";
+                } else if (e.estCoche()) {
+                    caseACocher = "[" + VERT + "✓" + RESET + "]";
                 }
-                contenu.add(prefixe + "[" + coche + "] " + e.getNom());
+                contenu.add(prefixe + caseACocher + " " + e.getNom());
             }
         }
 
-        int largeurContenu = 0;
-        for (String ligne : contenu) {
-            if (ligne.length() > largeurContenu) largeurContenu = ligne.length();
-        }
+        contenu.add("");
+        contenu.add(JAUNE + "●" + RESET + " mes cartes   " + VERT + "✓" + RESET + " deduction");
+        return contenu;
+    }
 
-        int marge = 2;
-        int largeurInterne = largeurContenu + marge * 2;
+    // --- petits outils de mise en page ---
 
-        StringBuilder sbBord = new StringBuilder();
-        for (int i = 0; i < largeurInterne; i++) {
-            sbBord.append('-');
+    private static String centrer(String texte, int largeur) {
+        int gauche = (largeur - texte.length()) / 2;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < gauche; i++) {
+            sb.append(' ');
         }
-        String bord = sbBord.toString();
+        sb.append(texte);
+        while (sb.length() < largeur) {
+            sb.append(' ');
+        }
+        return sb.toString();
+    }
 
-        StringBuilder sbPad = new StringBuilder();
-        for (int i = 0; i < marge; i++) {
-            sbPad.append(' ');
+    private static String repeter(char caractere, int nb) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < nb; i++) {
+            sb.append(caractere);
         }
-        String padding = sbPad.toString();
-
-        List<String> lignes = new ArrayList<>();
-        lignes.add("+" + bord + "+");
-        for (String ligne : contenu) {
-            lignes.add("|" + padding + pad(ligne, largeurContenu) + padding + "|");
-        }
-        lignes.add("+" + bord + "+");
-
-        if (actif) {
-            for (int i = 0; i < lignes.size(); i++) {
-                lignes.set(i, JAUNE + lignes.get(i) + RESET);
-            }
-        }
-        return lignes;
+        return sb.toString();
     }
 
     private static String pad(String ligne, int largeur) {
         StringBuilder sb = new StringBuilder(ligne);
-        while (sb.length() < largeur) sb.append(' ');
+        while (longueurVisible(sb.toString()) < largeur) {
+            sb.append(' ');
+        }
         return sb.toString();
+    }
+
+    /** Longueur affichee a l'ecran : on ne compte pas les codes couleur. */
+    private static int longueurVisible(String ligne) {
+        String sansCouleur = ligne.replaceAll("\u001B\\[[0-9;]*m", "");
+        return sansCouleur.length();
     }
 }

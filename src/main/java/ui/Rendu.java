@@ -1,43 +1,29 @@
 package ui;
 
 import java.util.List;
-import java.util.Scanner;
 
-/** Assemble le plateau, le carnet et la saisie, et traite les commandes /carnet, /map et /de. */
+/**
+ * Layout general : assemble le logo, la map et le panneau de droite
+ * (carnet ou de). L'affichage est pilote par moteur.BoucleDeJeu.
+ */
 public class Rendu {
 
-    private final Scanner clavier;
     private final AffichageMap map = new AffichageMap();
     private final PanneauDroit panneau = new PanneauDroit();
 
-    public Rendu(Scanner clavier) {
-        this.clavier = clavier;
+    public PanneauDroit getPanneau() {
+        return panneau;
     }
 
-    public void boucle() {
-        while (true) {
-            afficher();
-            String saisie = clavier.nextLine();
-            if (saisie == null || saisie.equalsIgnoreCase("q")) {
-                System.out.println("Au revoir !");
-                return;
-            }
-            if (saisie.equalsIgnoreCase("/carnet")) {
-                panneau.ouvrirCarnet();
-            } else if (saisie.equalsIgnoreCase("/map")) {
-                panneau.revenirMap();
-            } else if (saisie.equalsIgnoreCase("/de")) {
-                panneau.lancerDe();
-            } else {
-                panneau.traiter(saisie);
-            }
-        }
+    public AffichageMap getMap() {
+        return map;
     }
 
-    private void afficher() {
-        List<String> lignesMap = map.lignes();
+    /** Affiche l'ecran complet : logo, map avec les personnages, panneau de droite. */
+    public void afficher(List<Marqueur> marqueurs) {
+        List<String> lignesMap = map.lignes(marqueurs);
         List<String> lignesDroite = panneau.lignes();
-        int largeurMap = lignesMap.get(0).length() + 3;
+        int largeurMap = longueurVisible(lignesMap.get(0)) + 3;
 
         System.out.println();
         System.out.println(Logo.rendu(largeurMap + largeurPanneau(lignesDroite)));
@@ -47,7 +33,6 @@ public class Rendu {
         }
 
         System.out.println();
-        System.out.print(panneau.aide());
     }
 
     private String ligneDroite(List<String> lignes, int index) {
@@ -60,8 +45,9 @@ public class Rendu {
     private int largeurPanneau(List<String> lignes) {
         int max = 0;
         for (String ligne : lignes) {
-            if (ligne.length() > max) {
-                max = ligne.length();
+            int longueur = longueurVisible(ligne);
+            if (longueur > max) {
+                max = longueur;
             }
         }
         return max;
@@ -69,9 +55,15 @@ public class Rendu {
 
     private String pad(String ligne, int largeur) {
         StringBuilder sb = new StringBuilder(ligne);
-        while (sb.length() < largeur) {
+        while (longueurVisible(sb.toString()) < largeur) {
             sb.append(' ');
         }
         return sb.toString();
+    }
+
+    /** Longueur affichee a l'ecran : on ne compte pas les codes couleur ANSI. */
+    private int longueurVisible(String ligne) {
+        String sansCouleur = ligne.replaceAll("\u001B\\[[0-9;]*m", "");
+        return sansCouleur.length();
     }
 }
