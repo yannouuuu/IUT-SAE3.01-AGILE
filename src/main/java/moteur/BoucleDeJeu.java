@@ -420,7 +420,7 @@ public class BoucleDeJeu {
 
         boolean quelquUnAMontre = false;
         for (Joueur autre : partie.getJoueurs()) {
-            if (autre.getPersonnage().equals(suspect)){
+            if (!autre.getPersonnage().equals(joueur.getPersonnage())){
                 Carte montree = carteDansInventaire(autre, carteSuspect, carteArme, carteLieu);
                 if (montree != null) {
                     rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
@@ -567,8 +567,8 @@ public class BoucleDeJeu {
         String salle = partie.salleDuJoueur(joueur);
 
         System.out.println("Hypothese dans la salle : " + salle + " par "+joueur.getPersonnage());
-        Suspects suspect = Suspects.values()[1 + hasard.nextInt(5) - 1];
-        Armes arme = Armes.values()[1 + hasard.nextInt(5) - 1];
+        Suspects suspect = Suspects.values()[1 + hasard.nextInt(6)];
+        Armes arme = Armes.values()[1 + hasard.nextInt(6)];
         Lieux lieu = partie.lieuPourSalle(salle);
 
         dire(joueur.getPersonnage()+" proposes : " + suspect + " avec " + arme + " dans " + lieu + ".");
@@ -579,7 +579,7 @@ public class BoucleDeJeu {
 
         boolean quelquUnAMontre = false;
         for (Joueur autre : partie.getJoueurs()) {
-            if (autre.getPersonnage().equals(suspect)){
+            if (!autre.getPersonnage().equals(joueur.getPersonnage())){
                 Carte montree = carteDansInventaire(autre, carteSuspect, carteArme, carteLieu);
                 if (montree != null) {
                     rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
