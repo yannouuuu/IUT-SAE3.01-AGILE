@@ -557,10 +557,41 @@ public class BoucleDeJeu {
             arrivee = "dans le couloir";
         } else {
             arrivee = "dans la salle : " + salle;
+            faireHypotheseBot(bot);
         }
         dire(bot.getPersonnage().pastille() + " " + bot.getPersonnage()
                 + " lance le de (" + valeur + ") et s'arrete " + arrivee + ".");
     }
+
+    private void faireHypotheseBot(Bot joueur){
+        String salle = partie.salleDuJoueur(joueur);
+
+        System.out.println("Hypothese dans la salle : " + salle + " par "+joueur.getPersonnage());
+        Suspects suspect = Suspects.values()[1 + hasard.nextInt(5) - 1];
+        Armes arme = Armes.values()[1 + hasard.nextInt(5) - 1];
+        Lieux lieu = partie.lieuPourSalle(salle);
+
+        dire(joueur.getPersonnage()+" proposes : " + suspect + " avec " + arme + " dans " + lieu + ".");
+
+        CarteSuspect carteSuspect = new CarteSuspect(suspect);
+        CarteArme carteArme = new CarteArme(arme);
+        CarteLieu carteLieu = new CarteLieu(lieu);
+
+        boolean quelquUnAMontre = false;
+        for (Joueur autre : partie.getJoueurs()) {
+            if (autre.getPersonnage().equals(suspect)){
+                Carte montree = carteDansInventaire(autre, carteSuspect, carteArme, carteLieu);
+                if (montree != null) {
+                    rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
+                    quelquUnAMontre = true;
+                    break;
+                }
+            } else {
+                continue;
+            }
+        }
+    }
+
 
     /** Essaie quelques directions au hasard ; retourne false si le bot est coince. */
     private boolean deplacerBotAuHasard(Bot bot) {
