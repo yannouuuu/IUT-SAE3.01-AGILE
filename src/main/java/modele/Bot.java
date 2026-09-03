@@ -1,8 +1,9 @@
 package modele;
 
+/** Un joueur controle par l'ordinateur. */
 public class Bot extends Joueur {
 
-    public Bot(String nom, Carte[] cI) {
-        super(nom, cI);
+    public Bot(Suspects personnage, Carte[] cI) {
+        super(personnage, cI);
     }
 }
