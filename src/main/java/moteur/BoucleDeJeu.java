@@ -420,16 +420,17 @@ public class BoucleDeJeu {
 
         boolean quelquUnAMontre = false;
         for (Joueur autre : partie.getJoueurs()) {
-            if (autre == joueur) {
+            if (autre.getPersonnage().equals(suspect)){
+                Carte montree = carteDansInventaire(autre, carteSuspect, carteArme, carteLieu);
+                if (montree != null) {
+                    rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
+                    dire(autre.getPersonnage() + " te montre une carte : " + montree
+                            + " (cochee dans ton carnet).");
+                    quelquUnAMontre = true;
+                    break;
+                }
+            } else {
                 continue;
-            }
-            Carte montree = carteDansInventaire(autre, carteSuspect, carteArme, carteLieu);
-            if (montree != null) {
-                rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
-                dire(autre.getPersonnage() + " te montre une carte : " + montree
-                        + " (cochee dans ton carnet).");
-                quelquUnAMontre = true;
-                break;
             }
         }
 
