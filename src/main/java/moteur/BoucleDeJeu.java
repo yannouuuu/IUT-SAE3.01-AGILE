@@ -590,3 +590,4 @@ public class BoucleDeJeu {
         etat = Etat.MENU;
     }
 
+}
