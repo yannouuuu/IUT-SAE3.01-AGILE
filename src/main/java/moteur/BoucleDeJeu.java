@@ -80,9 +80,7 @@ public class BoucleDeJeu {
         messages.add(message);
     }
 
-    // ------------------------------------------------------------------
     // Etat MENU
-    // ------------------------------------------------------------------
 
     private void faireMenu() {
         effacerEcran();
@@ -104,7 +102,6 @@ public class BoucleDeJeu {
         ItnitialiserPartie init = new ItnitialiserPartie();
 
         Object[] resultat = init.systemeDistribution();
-        @SuppressWarnings("unchecked")
         List<List<Carte>> inventaires = (List<List<Carte>>) resultat[0];
         Carte[] cartesCachees = (Carte[]) resultat[1];
 
@@ -145,10 +142,8 @@ public class BoucleDeJeu {
         return nomEnum.replace('_', ' ');
     }
 
-    // ------------------------------------------------------------------
     // Etat PARTIE : un appel = le tour d'un joueur
-    // ------------------------------------------------------------------
-
+    
     private void faireUnTour() {
         Joueur courant = tours.joueurCourant();
 
@@ -165,9 +160,7 @@ public class BoucleDeJeu {
         }
     }
 
-    // ------------------------------------------------------------------
     // Tour du joueur humain
-    // ------------------------------------------------------------------
 
     private void jouerTourJoueur(Joueur joueur) {
         boolean tourFini = false;
@@ -233,9 +226,7 @@ public class BoucleDeJeu {
         dire("  q          quitter la partie");
     }
 
-    // ------------------------------------------------------------------
     // De et deplacement
-    // ------------------------------------------------------------------
 
     private void lancerDeEtDeplacer(Joueur joueur) {
         int valeur = rendu.getPanneau().lancerDe();
@@ -382,9 +373,7 @@ public class BoucleDeJeu {
         arriveeDansSalle(joueur, destination);
     }
 
-    // ------------------------------------------------------------------
     // PNJ et enigmes
-    // ------------------------------------------------------------------
 
     private void parlerAuPnj(Joueur joueur) {
         String salle = partie.salleDuJoueur(joueur);
@@ -396,9 +385,7 @@ public class BoucleDeJeu {
         dire(pnj.dialogue());
     }
 
-    // ------------------------------------------------------------------
     // Hypothese : les autres joueurs montrent une carte s'ils en ont une
-    // ------------------------------------------------------------------
 
     private void faireHypothese(Joueur joueur) {
         String salle = partie.salleDuJoueur(joueur);
@@ -432,6 +419,17 @@ public class BoucleDeJeu {
             } else {
                 continue;
             }
+<<<<<<< HEAD
+=======
+            Carte montree = carteDansInventaire(autre, new Carte[]{carteSuspect, carteArme, carteLieu});
+            if (montree != null) {
+                rendu.getPanneau().getCarnet().cocherCarte(nomPourCarnet(montree));
+                dire(autre.getPersonnage() + " te montre une carte : " + montree
+                        + " (cochee dans ton carnet).");
+                quelquUnAMontre = true;
+                break;
+            }
+>>>>>>> 7503568 (feat: add EnigmeBackUp class and refactor BoucleDeJeu for improved game logic)
         }
 
         if (!quelquUnAMontre) {
@@ -439,8 +437,8 @@ public class BoucleDeJeu {
         }
     }
 
-    /** Retourne la premiere carte de l'inventaire qui correspond a l'hypothese, ou null. */
-    private Carte carteDansInventaire(Joueur joueur, Carte... recherchees) {
+    /** Retourne la premiere carte de l'inventaire qui correspond a l'hypothese ou null. */
+    private Carte carteDansInventaire(Joueur joueur, Carte[] recherchees) {
         for (Carte carte : joueur.getCardInventory()) {
             for (Carte recherchee : recherchees) {
                 if (carte.equals(recherchee)) {
@@ -451,9 +449,7 @@ public class BoucleDeJeu {
         return null;
     }
 
-    // ------------------------------------------------------------------
     // Accusation finale
-    // ------------------------------------------------------------------
 
     private void faireAccusation(Joueur joueur) {
         System.out.println("ACCUSATION FINALE ! Bonne reponse = victoire, mauvaise = defaite.");
@@ -497,9 +493,7 @@ public class BoucleDeJeu {
         return sb.toString();
     }
 
-    // ------------------------------------------------------------------
     // Choix numerotes
-    // ------------------------------------------------------------------
 
     private Suspects choisirSuspect() {
         System.out.println("Quel suspect ?");
@@ -530,9 +524,7 @@ public class BoucleDeJeu {
         return partie.lieuPourSalle(SALLES[numero - 1]);
     }
 
-    // ------------------------------------------------------------------
     // Tour d'un bot : il lance le de et se deplace au hasard
-    // ------------------------------------------------------------------
 
     private void jouerTourBot(Bot bot) {
         int valeur = rendu.getPanneau().lancerDe();
@@ -606,9 +598,7 @@ public class BoucleDeJeu {
         return false;
     }
 
-    // ------------------------------------------------------------------
     // Affichage : on efface le terminal puis on redessine tout l'ecran
-    // ------------------------------------------------------------------
 
     private void afficherEcran() {
         effacerEcran();
@@ -641,7 +631,6 @@ public class BoucleDeJeu {
      */
     private void effacerEcran() {
         System.out.print("\u001B[H\u001B[2J");
-        System.out.flush();
     }
 
     /** Une ligne qui rappelle quelle pastille correspond a quel personnage. */
@@ -658,9 +647,7 @@ public class BoucleDeJeu {
         return sb.toString();
     }
 
-    // ------------------------------------------------------------------
     // Etat FIN
-    // ------------------------------------------------------------------
 
     private void faireFin() {
         effacerEcran();
