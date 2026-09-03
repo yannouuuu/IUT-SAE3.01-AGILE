@@ -1,5 +1,10 @@
 package moteur;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
+
 import interaction.Commandes;
 import interaction.Pnj;
 import interaction.Saisie;
@@ -16,11 +21,6 @@ import ui.AffichageMap;
 import ui.Marqueur;
 import ui.Menu;
 import ui.Rendu;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
 
 /** Machine a etats du jeu : Menu -> Partie -> Fin. */
 public class BoucleDeJeu {
@@ -121,6 +121,9 @@ public class BoucleDeJeu {
         dire("Bienvenue ! Tu joues " + personnage + " " + personnage.pastille() + ".");
         dire("Tes " + joueurs[0].getCardInventory().length
                 + " cartes de depart sont deja cochees dans ton carnet (/carnet pour les voir).");
+
+        // Avant meme d'afficher la map pour la premiere fois, on montre ses cartes de depart au joueur
+        afficherCartesJoueursTemporairement(joueurs[0]);
     }
 
     private void cocherCartesDansLeCarnet(Joueur joueur) {
@@ -132,14 +135,34 @@ public class BoucleDeJeu {
     /** Transforme une carte en nom du carnet : SALLE_DE_BAL -> "salle de bal". */
     private String nomPourCarnet(Carte carte) {
         String nomEnum = "";
-        if (carte instanceof CarteSuspect) {
-            nomEnum = ((CarteSuspect) carte).getSuspect().name();
-        } else if (carte instanceof CarteArme) {
-            nomEnum = ((CarteArme) carte).getArme().name();
-        } else if (carte instanceof CarteLieu) {
-            nomEnum = ((CarteLieu) carte).getLieu().name();
+        if (carte instanceof CarteSuspect carteSuspect) {
+            nomEnum = carteSuspect.getSuspect().name();
+        } else if (carte instanceof CarteArme carteArme) {
+            nomEnum = carteArme.getArme().name();
+        } else if (carte instanceof CarteLieu carteLieu) {
+            nomEnum = carteLieu.getLieu().name();
         }
         return nomEnum.replace('_', ' ');
+    }
+
+    /** Les cles des cartes du joueur ("SUSPECT:MOUTARDE", ...), pour retrouver leur dessin dans AffichageCartes. */
+    private List<String> clesCartes(Joueur joueur) {
+        List<String> cles = new ArrayList<>();
+        for (Carte carte : joueur.getCardInventory()) {
+            cles.add(cleCarte(carte));
+        }
+        return cles;
+    }
+
+    private String cleCarte(Carte carte) {
+        if (carte instanceof CarteSuspect carteSuspect) {
+            return "SUSPECT:" + carteSuspect.getSuspect().name();
+        } else if (carte instanceof CarteArme carteArme) {
+            return "ARME:" + carteArme.getArme().name();
+        } else if (carte instanceof CarteLieu carteLieu) {
+            return "LIEU:" + carteLieu.getLieu().name();
+        }
+        return "";
     }
 
     // Etat PARTIE : un appel = le tour d'un joueur
@@ -184,6 +207,9 @@ public class BoucleDeJeu {
                 rendu.getPanneau().ouvrirCarnet();
             } else if (commande == Commandes.Type.MAP) {
                 rendu.getPanneau().revenirMap();
+                rendu.revenirMap();
+            } else if (commande == Commandes.Type.CARTES) {
+                afficherCartesJoueursTemporairement(joueur);
             } else if (commande == Commandes.Type.PARLER) {
                 parlerAuPnj(joueur);
             } else if (commande == Commandes.Type.HYPOTHESE) {
@@ -213,10 +239,23 @@ public class BoucleDeJeu {
         return rendu.getPanneau().aide();
     }
 
+    // Affiche les cartes du joueur humain pendant 5 secondes, puis revient a la map
+    private void afficherCartesJoueursTemporairement(Joueur joueur) {
+        rendu.ouvrirCartes(joueur.getPersonnage().toString(), clesCartes(joueur));
+        afficherEcran();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            // rien
+        }
+        rendu.revenirMap();
+    }
+
     private void direAide() {
         dire("Commandes disponibles :");
         dire("  /de        lancer le de puis se deplacer (z haut, s bas, q gauche, d droite)");
         dire("  /carnet    ouvrir le carnet (Espace = cocher, z/s = naviguer)");
+        dire("  /cartes    voir tes cartes");
         dire("  /map       revenir sur la map");
         dire("  /parler    discuter avec le PNJ present dans ta salle");
         dire("  /hypothese faire une hypothese dans la salle ou tu es");
