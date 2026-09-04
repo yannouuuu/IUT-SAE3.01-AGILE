@@ -5,7 +5,7 @@ Scrum Master : Charly Coic
 ## Démo + Planification du sprint suivant
 
 ### Ce que nous avons fait durant ce sprint
-Ajouter une légende, mettre de la colorie sur les cartes, les indices/énigmes, le bug du carnet ainsi que la fouille des salles.
+Ajouter une légende, mettre de la colorie sur les cartes, les indices/énigmes, le bug du carnet ainsi que la fouille des salles, ajouter de la musique, déplacement avec les flèches, modification du menu et de la fin.
 
 ### Ce que nous allons faire durant le prochain sprint
 Il n'y a pas de prochain sprint.
@@ -29,5 +29,5 @@ N’oubliez pas d’ajouter une photo du radiateur d’information (kanban + Bur
 
 ## Radiateur d'information
 
-![Radiateur d'information]()
-![Radiateur d'information]()
+![Radiateur d'information](radiateur01.png)
+![Radiateur d'information](radiateur02.png)
