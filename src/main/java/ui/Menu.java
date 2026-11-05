@@ -28,11 +28,10 @@ public class Menu {
 
         System.out.println();
         System.out.print(centrer("> ", largeur));
-        String choix = clavier.nextLine();
-        if (choix == null) {
+        if (!clavier.hasNextLine()) {
             return "q";
         }
-        return choix.toLowerCase();
+        return clavier.nextLine().trim().toLowerCase();
     }
 
     /** Centre un court prompt sur une ligne de largeur donnee. */

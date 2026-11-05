@@ -1,5 +1,7 @@
 package modele;
 
+import java.util.Objects;
+
 public class CarteArme extends Carte {
     private final Armes arme;
 
@@ -17,6 +19,11 @@ public class CarteArme extends Carte {
             return false;
         CarteArme other = (CarteArme) obj;
         return this.arme == other.arme;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(arme);
     }
 
     @Override

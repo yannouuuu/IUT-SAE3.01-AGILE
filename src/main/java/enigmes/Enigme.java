@@ -1,13 +1,7 @@
 package enigmes;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
-import java.util.Random;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Une enigme donnee par un PNJ : une question dont la reponse est le nom
@@ -20,21 +14,10 @@ public class Enigme {
 
     private final String question;
     private final String salleDeLaCle;
-    private boolean porteFerme = false;
-    private List<String> phrases = new ArrayList<>();
-    private String phrase = "./res/Phrase.csv";
-    private Random random = new Random();
 
     public Enigme(String question, String salleDeLaCle) {
         this.question = question;
         this.salleDeLaCle = salleDeLaCle;
-        try (Scanner sc = new Scanner (new File (phrase))){
-            while (sc.hasNextLine()) {
-                phrases.add(sc.nextLine());
-            }
-        } catch (FileNotFoundException e) {
-            System.err.println("Fichier Non Trouver.");
-        }
     }
 
     public String getQuestion() {
@@ -43,10 +26,6 @@ public class Enigme {
 
     public String getSalleDeLaCle() {
         return salleDeLaCle;
-    }
-
-    public void setPorteFerme (Boolean b) {
-        this.porteFerme = b;
     }
 
     /** Construit l'enigme de la salle demandee a partir du fichier Enigme.csv. */
@@ -77,10 +56,6 @@ public class Enigme {
         throw new IllegalArgumentException("Pas d'enigme pour la salle : " + salleDeLaCle);
     }
 
-    public String getPhrase() {
-        return phrases.get(random.nextInt(phrases.size()-1)+1);
-    }
-
     private static String rogner(String texte) {
         int debut = 0;
         while (debut < texte.length() && texte.charAt(debut) <= ' ') {
@@ -92,13 +67,4 @@ public class Enigme {
         }
         return texte.substring(debut, fin);
     }
-
-    /*à revoir*/
-    /*public String enigmePourPnj (String nomSalle) throws FileNotFoundException, IOException {
-        if (nomSalle.equals(this.salle) && porteFerme) {
-            return this.getEnigme();
-        }
-        return this.getPhrase();
-    }*/
-
 }

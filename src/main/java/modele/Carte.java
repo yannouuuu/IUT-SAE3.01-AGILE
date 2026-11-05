@@ -11,17 +11,8 @@ public abstract class Carte {
         return true;
     }
 
-    public boolean demande(Carte cDemander, Joueur p) {
-        Carte[] inventory = p.getCardInventory();
-        for (Carte c : inventory) {
-            if (c.equals(cDemander)) {
-                System.out.println(p.getPersonnage() + " a cette carte.");
-                return true;
-            }
-        }
-        System.out.println(p.getPersonnage() + " n'a pas cette carte.");
-        return false;
-    }
+    @Override
+    public abstract int hashCode();
 
     public abstract String toString();
 }

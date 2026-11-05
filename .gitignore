@@ -8,6 +8,12 @@ target/
 *.iws
 out/
 
+# Sauvegardes de partie (generees a l'execution)
+sauvegarde/
+
+# Outils locaux
+.commandcode/
+
 # Système
 .DS_Store
 Thumbs.db

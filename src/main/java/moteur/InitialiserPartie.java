@@ -8,7 +8,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class ItnitialiserPartie {
+/** Distribution des cartes et creation des joueurs au debut d'une partie. */
+public class InitialiserPartie {
+
+    /** Resultat de la distribution : les inventaires des joueurs et les trois cartes cachees. */
+    public record Distribution(List<List<Carte>> inventaires, Carte[] cartesCachees) {
+    }
 
     /**
      * Cree les 4 joueurs de la partie : les nbHumains premiers sont controles au clavier,
@@ -72,12 +77,11 @@ public class ItnitialiserPartie {
         return new Carte[]{armeCachee, lieuCache, suspectCache};
     }
 
-    public Object[] systemeDistribution() {
+    public Distribution systemeDistribution() {
         List<Carte> toutes = creerToutesLesCartes();
 
         Carte[] cachees = tirerCartesCachees();
 
-        // On retire les cartes cachÃ©es de la liste avec une boucle classique
         List<Carte> restantes = new ArrayList<>();
         for (Carte c : toutes) {
             boolean estCachee = c.equals(cachees[0])
@@ -90,7 +94,7 @@ public class ItnitialiserPartie {
 
         List<List<Carte>> inventaires = distribuerCartes(restantes);
 
-        return new Object[]{inventaires, cachees};
+        return new Distribution(inventaires, cachees);
     }
 
 

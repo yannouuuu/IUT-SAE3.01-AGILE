@@ -1,6 +1,7 @@
 package moteur;
 
 import java.io.File;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -9,7 +10,7 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
-import Historique.Sauvegarde;
+import historique.Sauvegarde;
 import carnet.Carnet;
 import enigmes.PortesFermees;
 import interaction.Commandes;
@@ -127,11 +128,11 @@ public class BoucleDeJeu {
     }
 
     private void preparerPartie(int nbHumains) {
-        ItnitialiserPartie init = new ItnitialiserPartie();
+        InitialiserPartie init = new InitialiserPartie();
 
-        Object[] resultat = init.systemeDistribution();
-        List<List<Carte>> inventaires = (List<List<Carte>>) resultat[0];
-        Carte[] cartesCachees = (Carte[]) resultat[1];
+        InitialiserPartie.Distribution distribution = init.systemeDistribution();
+        List<List<Carte>> inventaires = distribution.inventaires();
+        Carte[] cartesCachees = distribution.cartesCachees();
 
         Joueur[] joueurs = init.creerJoueurs(inventaires, nbHumains);
         partie = new EtatPartie(joueurs, cartesCachees);
@@ -180,8 +181,12 @@ public class BoucleDeJeu {
 
         new File(DOSSIER_SAUVEGARDES).mkdirs();
         String chemin = DOSSIER_SAUVEGARDES + "/" + nom + ".csv";
-        new Sauvegarde(serialiserPartie()).sauvegrade(chemin);
-        dire("Partie sauvegardee dans " + chemin + ".");
+        try {
+            Sauvegarde.ecrire(chemin, serialiserPartie());
+            dire("Partie sauvegardee dans " + chemin + ".");
+        } catch (UncheckedIOException e) {
+            dire("Impossible de sauvegarder la partie : " + e.getMessage());
+        }
     }
 
     /** Retourne true si une partie a bien ete chargee (l'appelant doit alors passer a l'etat PARTIE). */
@@ -199,7 +204,7 @@ public class BoucleDeJeu {
         }
 
         try {
-            restaurerPartie(Sauvegarde.importer(chemin));
+            restaurerPartie(Sauvegarde.lire(chemin));
             return true;
         } catch (RuntimeException e) {
             System.out.println("Sauvegarde illisible ou corrompue (" + e.getMessage() + ").");
@@ -891,9 +896,8 @@ public class BoucleDeJeu {
     private void faireHypotheseBot(Bot joueur){
         String salle = partie.salleDuJoueur(joueur);
 
-        System.out.println("Hypothese dans la salle : " + salle + " par "+joueur.getPersonnage());
-        Suspects suspect = Suspects.values()[1 + hasard.nextInt(6)];
-        Armes arme = Armes.values()[1 + hasard.nextInt(6)];
+        Suspects suspect = Suspects.values()[hasard.nextInt(Suspects.values().length)];
+        Armes arme = Armes.values()[hasard.nextInt(Armes.values().length)];
         Lieux lieu = partie.lieuPourSalle(salle);
 
         dire(joueur.getPersonnage()+" propose : " + suspect + " avec " + arme + " dans " + lieu + ".");
@@ -954,7 +958,7 @@ public class BoucleDeJeu {
         for (Joueur joueur : partie.getJoueurs()) {
             Suspects personnage = joueur.getPersonnage();
             sb.append(personnage.pastille()).append(' ').append(personnage);
-            if (joueur == tours.joueurCourant()) {
+            if (joueur == tours.joueurCourant() && !(joueur instanceof Bot)) {
                 sb.append(" (toi)");
             }
             sb.append("   ");

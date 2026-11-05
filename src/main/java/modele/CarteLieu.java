@@ -1,5 +1,7 @@
 package modele;
 
+import java.util.Objects;
+
 public class CarteLieu extends Carte {
     private final Lieux lieu;
 
@@ -17,6 +19,11 @@ public class CarteLieu extends Carte {
             return false;
         CarteLieu other = (CarteLieu) obj;
         return this.lieu == other.lieu;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(lieu);
     }
 
     @Override

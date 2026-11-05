@@ -92,15 +92,23 @@ public class Carnet {
     }
 
     private void monter() {
-        do {
-            if (selection > 0) selection--;
-        } while (entrees.get(selection).estTitre() && selection > 0);
+        int cible = selection - 1;
+        while (cible >= 0 && entrees.get(cible).estTitre()) {
+            cible--;
+        }
+        if (cible >= 0) {
+            selection = cible;
+        }
     }
 
     private void descendre() {
-        do {
-            if (selection < entrees.size() - 1) selection++;
-        } while (entrees.get(selection).estTitre() && selection < entrees.size() - 1);
+        int cible = selection + 1;
+        while (cible < entrees.size() && entrees.get(cible).estTitre()) {
+            cible++;
+        }
+        if (cible < entrees.size()) {
+            selection = cible;
+        }
     }
 
     // --- lecture de l'etat pour le rendu ---
